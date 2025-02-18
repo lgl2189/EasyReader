@@ -18,7 +18,7 @@ public class CookieSaverTest {
         cookieStore.addCookie(new BasicClientCookie("name2", "value2"));
         cookieStore.addCookie(new BasicClientCookie("name3", "value3"));
         CookieSaver.save(cookieStore, "test1","C:\\Users\\12145\\Desktop\\新建文件夹");
-        CookieStore cookieStore2 = CookieSaver.load("test1","C:\\Users\\12145\\Desktop\\新建文件夹");
+        CookieStore cookieStore2 = CookieSaver.loadAsCookieStore("test1","C:\\Users\\12145\\Desktop\\新建文件夹");
         System.out.println(cookieStore2.getCookies());
     }
 }
