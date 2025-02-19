@@ -3,7 +3,6 @@ package com.reader.util.json;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.reader.exception.EmptyFileException;
-import com.reader.exception.InvalidInputFileException;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.cookie.CookieStore;
@@ -27,6 +26,13 @@ public class CookieSaver {
     private static final String jsonFilePrefix = File.separator + "cookie" + File.separator;
     private static final String jsonFileSuffix = ".json";
 
+    /**
+     * 将Cookie保存到本地
+     * @param cookieMapList 存储Cookie的List列表
+     * @param cookieFileName Cookie文件名
+     * @param path 存储Cookie文件的文件夹的路径
+     * @throws IOException IO异常
+     */
     public static void save(List<Map<String, String>> cookieMapList, String cookieFileName, String path)
             throws IOException {
         String jsonFilePath = path + jsonFilePrefix;
@@ -44,6 +50,13 @@ public class CookieSaver {
         }
     }
 
+    /**
+     * 将Cookie保存到本地
+     * @param cookieStore 存储Cookie的Apache的CookieStore对象
+     * @param cookieFileName Cookie文件名
+     * @param path 存储Cookie文件的文件夹的路径
+     * @throws IOException IO异常
+     */
     public static void save(CookieStore cookieStore, String cookieFileName, String path) throws IOException {
         List<Map<String, String>> cookieMapList = new ArrayList<>();
         for (Cookie cookie : cookieStore.getCookies()) {
@@ -62,6 +75,13 @@ public class CookieSaver {
         save(cookieMapList, cookieFileName, path);
     }
 
+    /**
+     * 将Cookie保存到本地
+     * @param cookieSet 存储Cookie的Selenium的Set对象
+     * @param cookieFileName Cookie文件名
+     * @param path 存储Cookie文件的文件夹的路径
+     * @throws IOException IO异常
+     */
     public static void save(Set<org.openqa.selenium.Cookie> cookieSet, String cookieFileName, String path) throws IOException {
         List<Map<String, String>> cookieMapList = new ArrayList<>();
         for (org.openqa.selenium.Cookie cookie : cookieSet) {
@@ -102,6 +122,13 @@ public class CookieSaver {
         cookieMapList.add(cookieMap);
     }
 
+    /**
+     * 从本地读取Cookie
+     * @param cookieFileName Cookie文件名
+     * @param path 存储Cookie文件的文件夹的路径
+     * @return Cookie的List列表
+     * @throws IOException IO异常
+     */
     public static List<Map<String, String>> load(String cookieFileName, String path) throws IOException {
         String jsonFilePath = path + jsonFilePrefix;
         File file = new File(jsonFilePath);
@@ -126,6 +153,13 @@ public class CookieSaver {
         }
     }
 
+    /**
+     * 从本地读取Cookie
+     * @param cookieFileName Cookie文件名
+     * @param path 存储Cookie文件的文件夹的路径
+     * @return 存储在Apache的CookieStore对象中的Cookie
+     * @throws IOException IO异常
+     */
     public static CookieStore loadAsCookieStore(String cookieFileName, String path) throws IOException {
         List<Map<String, String>> cookieMapList = load(cookieFileName, path);
         CookieStore cookieStore = new BasicCookieStore();
@@ -155,6 +189,13 @@ public class CookieSaver {
         return cookieStore;
     }
 
+    /**
+     * 从本地读取Cookie
+     * @param cookieFileName Cookie文件名
+     * @param path 存储Cookie文件的文件夹的路径
+     * @return 存储在Selenium的Set集合中的Cookie
+     * @throws IOException IO异常
+     */
     public static Set<org.openqa.selenium.Cookie> loadAsCookieSet(String cookieFileName, String path) throws IOException {
         List<Map<String, String>> cookieMapList = load(cookieFileName, path);
         Set<org.openqa.selenium.Cookie> cookieSet = new HashSet<>();
