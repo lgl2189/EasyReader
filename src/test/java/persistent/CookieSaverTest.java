@@ -1,3 +1,5 @@
+package persistent;
+
 import com.reader.util.CookieSaver;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
