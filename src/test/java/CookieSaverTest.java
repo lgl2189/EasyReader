@@ -1,4 +1,4 @@
-import com.reader.util.json.CookieSaver;
+import com.reader.util.CookieSaver;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.CookieStore;
