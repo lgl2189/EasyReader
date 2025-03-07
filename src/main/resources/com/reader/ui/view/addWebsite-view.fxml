@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- addWebsite-view.fxml -->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<SplitPane dividerPositions="0.3" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml">
+
+    <!-- 左侧区域 -->
+    <VBox spacing="10" style="-fx-padding: 15px;">
+        <Button text="添加新网站" fx:id="btnAddNew"/>
+        <ListView fx:id="websiteListView" VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+    <!-- 右侧区域 -->
+    <StackPane>
+        <!-- 添加表单 -->
+        <GridPane fx:id="addForm" visible="true">
+            <Label text="网站URL:" GridPane.rowIndex="0"/>
+            <TextField fx:id="tfUrl" promptText="输入网站地址" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="网站名称:" GridPane.rowIndex="1"/>
+            <TextField fx:id="tfName" promptText="输入网站名称" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Button text="添加网站" fx:id="btnConfirmAdd" GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+        </GridPane>
+
+        <!-- 详情面板 -->
+        <VBox fx:id="detailPanel" visible="false" spacing="15" style="-fx-padding: 20px;">
+            <Label text="网站名称：" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblWebsiteName"/>
+
+            <Label text="网站URL：" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblWebsiteUrl"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="XPath规则：" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="tfXpath" editable="false" style="-fx-min-width: 300px;"/>
+                <Button text="修改规则" fx:id="btnUpdateXpath"/>
+            </HBox>
+        </VBox>
+    </StackPane>
+</SplitPane>

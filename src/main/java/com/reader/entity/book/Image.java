@@ -1,4 +1,4 @@
-package com.reader.entity.content;
+package com.reader.entity.book;
 
 /**
  * @author     ：李冠良

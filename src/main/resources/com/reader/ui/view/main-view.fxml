@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.reader.ui.view.MainController">
+    <top>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" />
+    </top>
+    <center>
+        <StackPane fx:id="contentArea" />
+    </center>
+
+</BorderPane>
