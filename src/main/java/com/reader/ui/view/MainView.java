@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainController {
+public class MainView {
 
     @FXML private TabPane tabPane;
     @FXML private StackPane contentArea;

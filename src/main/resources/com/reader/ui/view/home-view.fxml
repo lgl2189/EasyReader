@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx/11.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.reader.ui.view.HomeController"
+      fx:controller="com.reader.ui.view.HomeView"
       spacing="20"
       alignment="CENTER"
       style="-fx-background-color: #f0f0f0;">

@@ -2,21 +2,27 @@
 package com.reader.entity.storage;
 
 public class Website {
+    private String id;
     private String url;
     private String name;
     private String xpath;
 
-
-    // 构造函数、getters、setters
-
-
     public Website() {
     }
 
-    public Website(String url, String name, String xpath) {
+    public Website(String id, String url, String name, String xpath) {
+        this.id = id;
         this.url = url;
         this.name = name;
         this.xpath = xpath;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUrl() {

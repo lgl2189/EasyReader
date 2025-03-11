@@ -3,6 +3,9 @@ package com.reader.storage.common.impl;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ：李冠良
@@ -35,11 +38,11 @@ public class ByteDepository extends CommonDepository<byte[]> {
         String filePath = getValueFilePath(key);
         File file = new File(filePath);
         if (file.exists()) {
-            if(!isOverwrite) {
+            if (!isOverwrite) {
                 System.out.println("添加失败，键已存在：" + key);
                 return;
             }
-            else{
+            else {
                 delete(key);
             }
         }
@@ -86,6 +89,40 @@ public class ByteDepository extends CommonDepository<byte[]> {
             throw new RuntimeException(e);
         }
         return value;
+    }
+
+    @Override
+    public Map<String, byte[]> getAll() {
+        String dirPath = getValueFilePath("");
+        // 创建一个新的HashMap来保存文件名和文件内容
+        Map<String, byte[]> resultMap = new HashMap<>();
+        // 获取该路径下的所有文件和目录
+        File[] files = new File(dirPath).listFiles();
+        if (files != null) { // 确保files不是null
+            for (File file : files) {
+                // 检查是否为文件，而不是目录
+                if (file.isFile()) {
+                    // 读取文件为byte数组
+                    byte[] fileContent = null;
+                    try {
+                        fileContent = Files.readAllBytes(file.toPath());
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    // 将文件名(不含扩展名)作为key，文件内容作为value存入map
+                    resultMap.put(file.getName(), fileContent);
+                }
+            }
+        }
+        return resultMap;
+    }
+
+    @Override
+    public boolean isKeyExists(String key) {
+        String filePath = getValueFilePath(key);
+        File file = new File(filePath);
+        return file.exists();
     }
 
     @Override

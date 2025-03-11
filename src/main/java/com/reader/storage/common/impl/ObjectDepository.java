@@ -77,9 +77,24 @@ public class ObjectDepository extends CommonDepository<Object> {
         }
     }
 
+    /**
+     * 获取数据，如果数据存在，则返回数据对象。如果数据不存在，则返回null
+     * @param key 数据的键
+     * @return 数据对象
+     */
     @Override
     public Object get(String key) {
         return dataMap.get(key);
+    }
+
+    @Override
+    public Map<String,Object> getAll() {
+        return Map.copyOf(dataMap);
+    }
+
+    @Override
+    public boolean isKeyExists(String key) {
+        return dataMap.containsKey(key);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.reader.storage.common;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,36 +27,21 @@ public class DataManager {
     /**
      * 构造函数，默认加载提供仓库名称的缓存仓库
      * @param storageRootPath 缓存根目录路径，路径末尾建议不添加分隔符。路径中的所有分隔符必须使用File.separator，避免出现未知错误
-     * @param depositoryPairs 需要创建的仓库的列表，DepositoryPair数组
+     * @param depositories 需要创建的仓库的列表，DataDepository<?>数组
      */
-    public DataManager(String storageRootPath, DepositoryPair[] depositoryPairs) {
+    public DataManager(String storageRootPath, DataDepository<?>[] depositories) {
         this(storageRootPath);
-        for (DepositoryPair depositoryPair : depositoryPairs) {
-            addDepository(depositoryPair.name(),depositoryPair.depositoryClazz());
+        for (DataDepository<?> depository : depositories) {
+            addDepository(depository);
         }
     }
 
     /**
      * 添加缓存仓库
-     * @param depositoryName 仓库名称。仓库名称不包含任何分隔符
-     * @param depositoryClass 缓存仓库类型
+     * @param depository 仓库引用对象
      */
-    public void addDepository(String depositoryName, Class<? extends DataDepository<?>> depositoryClass) {
-        try {
-            // 通过反射获取构造函数（假设所有Depository实现类都有(String, String)的构造函数）
-            Constructor<? extends DataDepository<?>> constructor =
-                    depositoryClass.getDeclaredConstructor(String.class, String.class);
-            // 创建新实例
-            DataDepository<?> depository =
-                    constructor.newInstance(this.storageRootPath, depositoryName);
-            depositoryMap.put(depositoryName, depository);
-        }
-        catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("该存储类" + depositoryClass.getName() + "没有找到(String,String)类型的构造函数", e);
-        }
-        catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("实例化存储类" + depositoryClass.getName() + "失败", e);
-        }
+    public void addDepository(DataDepository<?>  depository) {
+        depositoryMap.put(depository.getDepositoryName(), depository);
     }
 
     public DataDepository<?> getDepository(String depositoryName, Class<? extends DataDepository<?>> depositoryClass) {
@@ -86,8 +69,8 @@ public class DataManager {
         depository.deleteDepository();
     }
 
-    public void loadDepository(String depositoryName, Class<? extends DataDepository<?>> depositoryClass) {
-        addDepository(depositoryName, depositoryClass);
+    public void loadDepository(DataDepository<?> depository) {
+        addDepository(depository);
     }
 
     public void unloadDepository(String depositoryName) {

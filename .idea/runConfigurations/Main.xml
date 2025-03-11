@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.reader.ui.Main" />
+    <module name="EasyReader" />
+    <option name="VM_PARAMETERS" value="--module-path &quot;D:\Project\JavaProject\EasyReader\lib\javafx-sdk-23.0.2\lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.web" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.reader.ui.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

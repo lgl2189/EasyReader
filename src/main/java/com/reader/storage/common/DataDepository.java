@@ -1,5 +1,7 @@
 package com.reader.storage.common;
 
+import java.util.Map;
+
 /**
  * 这个接口定义了数据仓库的基本操作，包括添加、获取、删除、更新等。
  * 具体的实现类需要实现这个接口。
@@ -23,6 +25,10 @@ public interface DataDepository<T> {
     void add(String key, T value, boolean isOverwrite);
 
     T get(String key);
+
+    Map<String, T> getAll();
+
+    boolean isKeyExists(String key);
 
     boolean contain(String key);
 

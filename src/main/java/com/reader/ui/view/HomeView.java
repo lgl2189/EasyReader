@@ -8,6 +8,6 @@ package com.reader.ui.view;
 
 
 // HomeController.java - 首页控制器
-public class HomeController {
+public class HomeView {
     // 可以添加首页特定的逻辑
 }

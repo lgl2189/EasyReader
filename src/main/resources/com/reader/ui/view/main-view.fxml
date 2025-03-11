@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns="http://javafx.com/javafx/11.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.reader.ui.view.MainController">
+            fx:controller="com.reader.ui.view.MainView">
     <top>
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" />
     </top>
