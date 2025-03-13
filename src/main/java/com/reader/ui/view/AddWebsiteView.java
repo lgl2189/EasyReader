@@ -1,190 +1,115 @@
 package com.reader.ui.view;
 
-import com.reader.entity.storage.Website;
-import com.reader.entity.util.UrlBasedIdGenerator;
-import com.reader.storage.DataStorage;
-import com.reader.storage.common.impl.ObjectDepository;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
+import javafx.scene.control.Label;
 
-public class AddWebsiteView {
-    // 悬浮提示容器
-    @FXML
-    private StackPane notificationContainer;
-    // 左侧组件
-    @FXML
-    private ListView<Website> websiteListView;
-    @FXML
-    private Button addWebsiteBtn;
+/**
+ * @author      ：李冠良
+ * @description ：无描述
+ * @date        ：2025 3月 11 16:01
+ */
 
-    // 右侧组件
-    // 添加表单组件
-    @FXML
-    private GridPane addFormPane;
-    @FXML
-    private TextField urlInputField;
-    @FXML
-    private TextField nameInputField;
-    @FXML
-    private TextField xpathInputField;
-    @FXML
-    private Button confirmAddBtn;
-    @FXML
-    private Button getXpathBtn;
+public class NotificationUtil {
+    private static final String ERROR_COLOR = "#ff4444dd";
+    private static final String SUCCESS_COLOR = "#00cc00dd";
+    private static final String WARNING_COLOR = "#ffcc00dd";
 
-    // 详情面板组件
-    @FXML
-    private VBox detailPanel;
-    @FXML
-    private Label nameDisplayLabel;
-    @FXML
-    private Label urlDisplayLabel;
-    @FXML
-    private TextField xpathDisplayField;
-    @FXML
-    private Button updateXpathBtn;
+    // 新增枚举类来预置位置
+    public enum NotificationPosition {
+        TopLeft((_, _) -> new double[]{30, 30}),
+        TopCenter((root, notification) -> new double[]{root.getWidth() / 2 - notification.getWidth() / 2, 30}),
+        TopRight((root, notification) -> new double[]{root.getWidth() - notification.getWidth() - 30, 30}),
+        Right((root, notification) -> new double[]{root.getWidth() - notification.getWidth() - 30, root.getHeight() / 2 - notification.getHeight() / 2}),
+        BottomRight((root, notification) -> new double[]{root.getWidth() - notification.getWidth() - 30, root.getHeight() - notification.getHeight() - 30}),
+        BottomCenter((root, notification) -> new double[]{root.getWidth() / 2 - notification.getWidth() / 2, root.getHeight() - notification.getHeight() - 30}),
+        BottomLeft((root, notification) -> new double[]{30, root.getHeight() - notification.getHeight() - 30}),
+        Left((root, notification) -> new double[]{30, root.getHeight() / 2 - notification.getHeight() / 2});
 
-    private final ObservableList<Website> websiteList = FXCollections.observableArrayList();
-    private final ObjectDepository websiteDepository = DataStorage.WEBSITE_DEPOSITORY;
+        private final PositionCalculator calculator;
 
-    @FXML
-    public void initialize() {
-        setupInitialData();
-        setupInitialUi();
-        setupListView();
-        setupEventHandlers();
-        setupNotificationSystem(); // 新增初始化方法
-    }
-
-    private void setupInitialData() {
-        websiteDepository.getAll().forEach((_, value) -> websiteList.add((Website) value));
-    }
-
-    private void setupInitialUi() {
-        addFormPane.setVisible(false);
-        detailPanel.setVisible(false);
-    }
-
-    private void setupListView() {
-        websiteListView.setItems(websiteList);
-        websiteListView.setCellFactory(_ -> new ListCell<>() {
-            @Override
-            protected void updateItem(Website item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? null : item.getName());
-            }
-        });
-    }
-
-    private void setupEventHandlers() {
-        // 添加新网站按钮
-        addWebsiteBtn.setOnAction(_ -> {
-            addFormPane.setVisible(true);
-            detailPanel.setVisible(false);
-            websiteListView.getSelectionModel().clearSelection();
-            clearInputFields();
-        });
-        // 获取XPath按钮
-        getXpathBtn.setOnAction(_ -> {
-            String xpath = getXpathRule();
-            xpathInputField.setText(xpath);
-        });
-        // 确认添加按钮
-        confirmAddBtn.setOnAction(_ -> handleAddWebsite());
-        // 列表选择监听
-        websiteListView.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
-            if (newVal != null) {
-                showDetailPanel(newVal);
-                addFormPane.setVisible(false);
-                detailPanel.setVisible(true);
-            }
-            else {
-                detailPanel.setVisible(false);
-            }
-        });
-        // 更新XPath按钮
-        updateXpathBtn.setOnAction(_ -> getXpathRule());
-    }
-
-    // 新增通知系统初始化
-    private void setupNotificationSystem() {
-        notificationContainer.setMouseTransparent(true); // 允许点击穿透
-        notificationContainer.setPickOnBounds(false); // 不拦截边界内事件
-    }
-
-    private void clearInputFields() {
-        urlInputField.clear();
-        nameInputField.clear();
-        xpathInputField.clear();
-    }
-
-    private void handleAddWebsite() {
-        Website newWebsite = new Website(
-                UrlBasedIdGenerator.generateId(urlInputField.getText().trim()),
-                urlInputField.getText().trim(),
-                nameInputField.getText().trim(),
-                xpathInputField.getText().trim()
-        );
-        if (newWebsite.getName().isEmpty() || newWebsite.getUrl().isEmpty() || newWebsite.getXpath().isEmpty()) {
-            showErrorNotification("网站名称、网址和XPath不能为空！");
-            return;
+        NotificationPosition(PositionCalculator calculator) {
+            this.calculator = calculator;
         }
-        if (websiteList.stream().anyMatch(w -> w.getName().equals(newWebsite.getName()))) {
-            showErrorNotification("网站名称已存在，不能使用相同名称！");
-            return;
+
+        public double[] calculatePosition(Pane root, Label notification) {
+            return calculator.calculate(root, notification);
         }
-        websiteList.add(newWebsite);
-        websiteDepository.add(newWebsite.getId(), newWebsite);
-        addFormPane.setVisible(false);
-        clearInputFields();
     }
 
-    private void handleUpdateWebsite() {
-        Website selectedWebsite = websiteListView.getSelectionModel().getSelectedItem();
-        if (selectedWebsite == null) {
-            showErrorNotification("请先选择要更新的网站！");
-            return;
-        }
-        // 获取用户输入的新XPath（假设通过xpathDisplayField修改）
-        String newXpath = xpathDisplayField.getText().trim();
-        if (newXpath.isEmpty()) {
-            showErrorNotification("XPath不能为空！");
-            return;
-        }
-        // 更新所有同名网站的XPath
-        String targetId = selectedWebsite.getId();
-        websiteList.stream()
-                .filter(website -> website.getId().equals(targetId))
-                .forEach(website -> website.setXpath(newXpath));
-        showErrorNotification("已更新网站的XPath！");
+    // 定义一个函数式接口来计算位置
+    @FunctionalInterface
+    interface PositionCalculator {
+        double[] calculate(Pane root, Label notification);
     }
 
-    private void showErrorNotification(String message) {
+    // 新增重载方法，可传入位置参数，默认为 TopCenter
+    public static void showError(String message) {
+        showError(message, NotificationPosition.TopCenter);
+    }
+
+    public static void showError(String message, NotificationPosition position) {
+        createAndShowNotification(message, ERROR_COLOR, position);
+    }
+
+    public static void showSuccess(String message) {
+        showSuccess(message, NotificationPosition.TopCenter);
+    }
+
+    public static void showSuccess(String message, NotificationPosition position) {
+        createAndShowNotification(message, SUCCESS_COLOR, position);
+    }
+
+    public static void showWarning(String message) {
+        showWarning(message, NotificationPosition.TopCenter);
+    }
+
+    public static void showWarning(String message, NotificationPosition position) {
+        createAndShowNotification(message, WARNING_COLOR, position);
+    }
+
+    private static void createAndShowNotification(String message, String backgroundColor, NotificationPosition position) {
+        Window focusedWindow = Stage.getWindows().stream()
+                .filter(Window::isFocused)
+                .findFirst()
+                .orElse(null);
+        if (!(focusedWindow instanceof Stage)) return;
+
+        Scene scene = focusedWindow.getScene();
+        if (scene == null) return;
+
+        Pane root = (Pane) scene.getRoot();
+        if (root == null) return;
+
+        StackPane notificationContainer = findOrCreateNotificationContainer(root);
+
         Label notification = new Label(message);
-        notification.setStyle("-fx-background-color: #ff4444dd; -fx-background-radius: 15;"
-                + "-fx-padding: 10 20; -fx-text-fill: white; -fx-font-size: 14;"
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);");
+        notification.setMinWidth(Label.USE_PREF_SIZE);
+        notification.setMaxWidth(Double.MAX_VALUE);
+        notification.setStyle(
+                "-fx-background-color: " + backgroundColor + ";" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 14;" +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);"
+        );
 
-        // 设置初始状态
         notification.setOpacity(0);
         notificationContainer.getChildren().add(notification);
 
-        // 定位到顶部居中
-        notification.translateYProperty().bind(
-                notificationContainer.heightProperty()
-                        .subtract(notification.heightProperty())
-                        .divide(2).subtract(30)
-        );
+        // 根据位置参数调整通知的位置
+        double[] pos = position.calculatePosition(root, notification);
+        notification.setTranslateX(pos[0]);
+        notification.setTranslateY(pos[1]);
 
-        // 动画序列
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), notification);
         fadeIn.setToValue(1);
 
@@ -199,20 +124,20 @@ public class AddWebsiteView {
         fadeIn.play();
     }
 
-    private void showDetailPanel(Website website) {
-        nameDisplayLabel.setText(website.getName());
-        urlDisplayLabel.setText(website.getUrl());
-        xpathDisplayField.setText(website.getXpath());
-    }
-
-    private String getXpathRule() {
-//        Website selected = websiteListView.getSelectionModel().getSelectedItem();
-//        if (selected != null) {
-//            // 调用XPath获取逻辑示例
-//             String newXpath = XpathService.fetchXpath(selected.getUrl());
-//             selected.setXpath(newXpath);
-//             xpathDisplayField.setText(newXpath);
-//        }
-        return "xpath rule here";
+    private static StackPane findOrCreateNotificationContainer(Pane root) {
+        // 查找现有容器
+        return root.getChildren().stream()
+                .filter(node -> node instanceof StackPane && "notificationContainer".equals(node.getId()))
+                .map(node -> (StackPane) node)
+                .findFirst()
+                .orElseGet(() -> {
+                    StackPane container = new StackPane();
+                    container.setId("notificationContainer");
+                    container.setAlignment(Pos.TOP_CENTER);
+                    container.setMouseTransparent(true);
+                    container.setPickOnBounds(false);
+                    root.getChildren().add(container);
+                    return container;
+                });
     }
 }
