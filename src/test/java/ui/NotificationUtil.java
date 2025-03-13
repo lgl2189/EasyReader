@@ -1,4 +1,4 @@
-package com.reader.ui.util;
+package ui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -7,7 +7,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -74,9 +77,9 @@ public class NotificationUtil {
             return new double[]{newX, newY};
         });
 
-        private final NotificationUtil.NotificationPosition.PositionCalculator calculator;
+        private final PositionCalculator calculator;
 
-        NotificationPosition(NotificationUtil.NotificationPosition.PositionCalculator calculator) {
+        NotificationPosition(PositionCalculator calculator) {
             this.calculator = calculator;
         }
 
@@ -93,39 +96,39 @@ public class NotificationUtil {
     private static StackPane globalContainer; // 全局唯一通知容器
 
     public static void showError(String message) {
-        showError(message, NotificationUtil.NotificationPosition.TopCenter);
+        showError(message, NotificationPosition.TopCenter);
     }
 
-    public static void showError(String message, NotificationUtil.NotificationPosition position) {
+    public static void showError(String message, NotificationPosition position) {
         createAndShowNotification(message, ERROR_COLOR, position, 0, 0);
     }
 
     public static void showError(String message, double x, double y) {
-        createAndShowNotification(message, ERROR_COLOR, NotificationUtil.NotificationPosition.Custom, x, y);
+        createAndShowNotification(message, ERROR_COLOR, NotificationPosition.Custom, x, y);
     }
 
     public static void showSuccess(String message) {
-        showSuccess(message, NotificationUtil.NotificationPosition.TopCenter);
+        showSuccess(message, NotificationPosition.TopCenter);
     }
 
-    public static void showSuccess(String message, NotificationUtil.NotificationPosition position) {
+    public static void showSuccess(String message, NotificationPosition position) {
         createAndShowNotification(message, SUCCESS_COLOR, position, 0, 0);
     }
 
     public static void showSuccess(String message, double x, double y) {
-        createAndShowNotification(message, SUCCESS_COLOR, NotificationUtil.NotificationPosition.Custom, x, y);
+        createAndShowNotification(message, SUCCESS_COLOR, NotificationPosition.Custom, x, y);
     }
 
     public static void showWarning(String message) {
-        showWarning(message, NotificationUtil.NotificationPosition.TopCenter);
+        showWarning(message, NotificationPosition.TopCenter);
     }
 
-    public static void showWarning(String message, NotificationUtil.NotificationPosition position) {
+    public static void showWarning(String message, NotificationPosition position) {
         createAndShowNotification(message, WARNING_COLOR, position, 0, 0);
     }
 
     public static void showWarning(String message, double x, double y) {
-        createAndShowNotification(message, WARNING_COLOR, NotificationUtil.NotificationPosition.Custom, x, y);
+        createAndShowNotification(message, WARNING_COLOR, NotificationPosition.Custom, x, y);
     }
 
     private static void createAndShowNotification(String message, String backgroundColor,

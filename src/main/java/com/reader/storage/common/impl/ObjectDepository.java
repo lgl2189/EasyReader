@@ -75,6 +75,14 @@ public class ObjectDepository extends CommonDepository<Object> {
                 throw new IllegalArgumentException("key已存在: " + key);
             }
         }
+        else{
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+                oos.writeObject(value);
+                dataMap.put(key, value);
+            } catch (IOException e) {
+                throw new RuntimeException("添加对象失败，key: " + key, e);
+            }
+        }
     }
 
     /**
@@ -107,7 +115,7 @@ public class ObjectDepository extends CommonDepository<Object> {
         if (!contain(key)) {
             throw new IllegalArgumentException("key不存在: " + key);
         }
-        add(key, value);
+        add(key, value,true);
     }
 
     @Override

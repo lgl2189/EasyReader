@@ -15,8 +15,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/reader/ui/view/main-view.fxml")));
         primaryStage.setTitle("EasyReader 小说抓取器");
         primaryStage.setScene(new Scene(root, 1000, 700));
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(700);
         primaryStage.show();
     }
 

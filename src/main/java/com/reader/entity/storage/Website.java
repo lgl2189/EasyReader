@@ -1,7 +1,13 @@
 // Website.java
 package com.reader.entity.storage;
 
-public class Website {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Website implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 3476374593623737650L;
+
     private String id;
     private String url;
     private String name;
