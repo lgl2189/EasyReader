@@ -36,49 +36,61 @@ public class XPathGenerator extends Application {
             window.setMember("javaBridge", new JavaBridge());
 
             // 关键修复点：修复 JavaScript 语法错误
-            String js = "(function() {"  // 改用传统函数声明，避免箭头函数潜在兼容性问题
-                    + "const handleClick = function(e) {"  // 改用 function 声明
-                    + "   e.preventDefault();"
-                    + "   let el = e.target;"
-                    + "   let path = [];"
-                    + "   while (el && el.nodeType === 1) {"  // 确保 while 循环闭合
-                    + "       let seg = el.tagName.toLowerCase();"
-                    + "       if (el.id) {"
-                    + "           seg += '[@id=\"' + el.id + '\"]';"  // 改用单引号避免转义问题
+            String js = "(function() {"
+                    + "const handleClick = function(e) {"
+                    + "   if (e.button === 2) {"
+                    + "       e.preventDefault();"
+                    + "       let el = e.target;"
+                    + "       let path = [];"
+                    + "       while (el && el.nodeType === 1) {"
+                    + "           let seg = el.tagName.toLowerCase();"
+                    + "           if (el.id) {"
+                    + "               seg += '[@id=\"' + el.id + '\"]';"
+                    + "               path.unshift(seg);"
+                    + "               break;"
+                    + "           } else {"
+                    + "               let siblings = el.parentNode.children;"
+                    + "               let index = Array.from(siblings).indexOf(el) + 1;"
+                    + "               if (index > 1) seg += '[' + index + ']';"
+                    + "           }"
                     + "           path.unshift(seg);"
-                    + "           break;"
-                    + "       } else {"
-                    + "           let siblings = el.parentNode.children;"
-                    + "           let index = Array.from(siblings).indexOf(el) + 1;"
-                    + "           if (index > 1) seg += '[' + index + ']';"  // 字符串拼接标准化
+                    + "           el = el.parentNode;"
                     + "       }"
-                    + "       path.unshift(seg);"  // 修复此处缺少分号
-                    + "       el = el.parentNode;"
+                    + "       javaBridge.onXPath('//' + path.join('/'));"
                     + "   }"
-                    + "   javaBridge.onXPath('//' + path.join('/'));"  // 闭合括号
                     + "};"
-
-                    + "document.addEventListener('click', handleClick, true);"
-
-                    + "new MutationObserver(function(mutations) {"  // 改用传统函数
+                    + "const handleMouseOver = function(e) {"
+                    + "   e.target.style.outline = '1px solid black';"
+                    + "};"
+                    + "const handleMouseOut = function(e) {"
+                    + "   e.target.style.outline = '';"
+                    + "};"
+                    + "document.addEventListener('contextmenu', handleClick, true);"
+                    + "document.addEventListener('mouseover', handleMouseOver, true);"
+                    + "document.addEventListener('mouseout', handleMouseOut, true);"
+                    + "new MutationObserver(function(mutations) {"
                     + "   mutations.forEach(function(m) {"
                     + "       Array.from(m.addedNodes).forEach(function(n) {"
-                    + "           if (n.nodeType === 1) n.addEventListener('click', handleClick);"
+                    + "           if (n.nodeType === 1) {"
+                    + "               n.addEventListener('contextmenu', handleClick);"
+                    + "               n.addEventListener('mouseover', handleMouseOver);"
+                    + "               n.addEventListener('mouseout', handleMouseOut);"
+                    + "           }"
                     + "       });"
                     + "   });"
                     + "}).observe(document.documentElement, {"
                     + "   childList: true, subtree: true"
                     + "});"
-                    + "})();";  // 确保 IIFE 闭合
-
+                    + "})();";
             engine.executeScript(js);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     // Java 回调处理器
-    public class JavaBridge {
+    public static class JavaBridge {
         public void onXPath(String xpath) {
             System.out.println("[Generated XPath] " + xpath);
         }
