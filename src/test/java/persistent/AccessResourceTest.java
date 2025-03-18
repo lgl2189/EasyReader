@@ -1,7 +1,7 @@
 package persistent;
 
-import com.reader.access.AccessResource;
 import com.reader.entity.net.ResponseData;
+import com.reader.net.AccessResource;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 

@@ -1,4 +1,4 @@
-package com.reader.access;
+package com.reader.net;
 
 /**
  * @author      ：李冠良
