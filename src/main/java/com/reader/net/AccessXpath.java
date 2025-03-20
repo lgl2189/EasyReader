@@ -38,6 +38,10 @@ public class AccessXpath {
             return "";
         }
 
+        if (xpathList.size() == 1) {
+            return xpathList.getFirst();
+        }
+
         // 找出公共前缀
         String commonPrefix = findCommonPrefix(xpathList);
 
@@ -54,7 +58,7 @@ public class AccessXpath {
         }
 
         // 如果没有找到更精确的定位信息，返回第一个 XPath
-        return xpathList.get(0);
+        return xpathList.getFirst();
     }
 
     private String findCommonPrefix(List<String> xpathList) {
@@ -90,10 +94,12 @@ public class AccessXpath {
                 if (step.contains("@id=")) {
                     String id = extractAttributeValue(step, "@id=");
                     idCount.put(id, idCount.getOrDefault(id, 0) + 1);
-                } else if (step.contains("@class=")) {
+                }
+                else if (step.contains("@class=")) {
                     String className = extractAttributeValue(step, "@class=");
                     classCount.put(className, classCount.getOrDefault(className, 0) + 1);
-                } else if (step.contains("@")) {
+                }
+                else if (step.contains("@")) {
                     String[] attrParts = step.split("=");
                     if (attrParts.length > 1) {
                         String attr = attrParts[0].trim();
@@ -106,6 +112,10 @@ public class AccessXpath {
         }
 
         // 按照优先级选择最佳定位器
+        return getBestLocator(idCount, classCount, attrCount);
+    }
+
+    private static String getBestLocator(Map<String, Integer> idCount, Map<String, Integer> classCount, Map<String, Integer> attrCount) {
         String bestLocator = "";
         int maxCount = 0;
 
@@ -136,7 +146,6 @@ public class AccessXpath {
                 }
             }
         }
-
         return bestLocator;
     }
 

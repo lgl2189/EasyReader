@@ -5,15 +5,16 @@
             let el = e.target;
             let path = [];
 
-            function isUniqueSelector(selector) {
-                return document.querySelectorAll(selector).length === 1;
+            function isUniqueSelector(xpath) {
+                const result = document.evaluate(xpath, document.body, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                return result.snapshotLength === 1;
             }
 
             while (el && el.nodeType === 1) {
                 let seg = null;
 
                 // 尝试使用唯一的 id
-                if (el.id && isUniqueSelector(`#${el.id}`)) {
+                if (el.id && isUniqueSelector(`//${el.tagName.toLowerCase()}[@id="${el.id}"]`)) {
                     seg = `${el.tagName.toLowerCase()}[@id="${el.id}"]`;
                     path.unshift(seg);
                     break;
@@ -22,7 +23,7 @@
                 // 尝试使用唯一的 class
                 if (el.classList.length > 0) {
                     for (let className of el.classList) {
-                        if (isUniqueSelector(`.${className}`)) {
+                        if (isUniqueSelector(`//${el.tagName.toLowerCase()}[contains(@class, "${className}")]`)) {
                             seg = `${el.tagName.toLowerCase()}[contains(@class, "${className}")]`;
                             path.unshift(seg);
                             break;
@@ -31,19 +32,19 @@
                     if (seg) break;
                 }
 
-                // 尝试使用唯一的 attribute
-                const attributes = el.attributes;
-                for (let i = 0; i < attributes.length; i++) {
-                    const attr = attributes[i];
-                    if (attr.name !== 'id' && attr.name !== 'class') {
-                        const selector = `${el.tagName.toLowerCase()}[@${attr.name}="${attr.value}"]`;
-                        if (isUniqueSelector(selector)) {
-                            seg = selector;
-                            path.unshift(seg);
-                            break;
-                        }
-                    }
-                }
+                // 尝试使用唯一的 attribute，暂时不使用属性选择器，因为属性值可能包含内容，存在产生错误xpath的可能性
+                // const attributes = el.attributes;
+                // for (let i = 0; i < attributes.length; i++) {
+                //     const attr = attributes[i];
+                //     if (attr.name !== 'id' && attr.name !== 'class' && attr.name !== 'style') {
+                //         const xpath = `//${el.tagName.toLowerCase()}[@${attr.name}="${attr.value}"]`;
+                //         if (isUniqueSelector(xpath)) {
+                //             seg = `${el.tagName.toLowerCase()}[@${attr.name}="${attr.value}"]`;
+                //             path.unshift(seg);
+                //             break;
+                //         }
+                //     }
+                // }
                 if (seg) break;
 
                 // 使用父子层级

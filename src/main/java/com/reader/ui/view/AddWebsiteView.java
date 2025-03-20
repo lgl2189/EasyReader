@@ -2,6 +2,7 @@ package com.reader.ui.view;
 
 import com.reader.entity.storage.Website;
 import com.reader.entity.util.UrlBasedIdGenerator;
+import com.reader.net.AccessXpath;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
 import com.reader.ui.util.NotificationUtil;
@@ -11,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import vjson.pl.ast.Access;
 
 public class AddWebsiteView {
     // 左侧组件
@@ -89,7 +91,7 @@ public class AddWebsiteView {
         });
         // 获取XPath按钮
         getXpathBtn.setOnAction(_ -> {
-            String xpath = getXpathRule();
+            String xpath = getXpathRule(urlInputField.getText().trim());
             xpathInputField.setText(xpath);
         });
         // 确认添加按钮
@@ -106,7 +108,7 @@ public class AddWebsiteView {
             }
         });
         // 更新XPath按钮
-        updateXpathBtnByUI.setOnAction(_ -> xpathDisplayField.setText(getXpathRule()));
+        updateXpathBtnByUI.setOnAction(_ -> xpathDisplayField.setText(getXpathRule(urlDisplayLabel.getText().trim())));
         updateXpathBtn.setOnAction(_ -> handleUpdateWebsite());
 
     }
@@ -161,14 +163,12 @@ public class AddWebsiteView {
         xpathDisplayField.setText(website.getXpath());
     }
 
-    private String getXpathRule() {
-//        Website selected = websiteListView.getSelectionModel().getSelectedItem();
-//        if (selected != null) {
-//            // 调用XPath获取逻辑示例
-//             String newXpath = XpathService.fetchXpath(selected.getUrl());
-//             selected.setXpath(newXpath);
-//             xpathDisplayField.setText(newXpath);
-//        }
-        return "xpath rule here";
+    private String getXpathRule(String url) {
+        if (url == null || url.isEmpty()){
+            return "";
+        }
+        AccessXpath accessXpath = new AccessXpath(url);
+        accessXpath.execute();
+        return accessXpath.getXpath();
     }
 }
