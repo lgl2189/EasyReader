@@ -1,12 +1,13 @@
 package com.reader.net;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import netscape.javascript.JSObject;
 
 import java.io.InputStream;
@@ -20,37 +21,42 @@ import java.util.concurrent.CompletableFuture;
 /**
  * @author      ：李冠良
  * @description ：这个类不允许多线程启动，同时只能有一个线程在使用这个类。否则会抛出运行时错误。
- * @date        ：2025 3月 17 11:11
  */
-
-public class XPathGenerator extends Application {
+public class XPathGenerator {
     private static String xpathScript;
     private static String inputUrl;
     private static boolean isSingleElementParam;
-    private static final CompletableFuture<String> xpathFuture = new CompletableFuture<>();
-    private static final CompletableFuture<List<String>> xpathListFuture = new CompletableFuture<>();
+    private static CompletableFuture<String> xpathFuture;
+    private static CompletableFuture<List<String>> xpathListFuture;
     private static boolean isStart = false;
     private static final List<String> xpathList = new ArrayList<>();
 
     static {
+        loadXPathScript();
+    }
+
+    private static void loadXPathScript() {
         try {
-            // 从资源文件中读取 JavaScript 代码
             InputStream inputStream = XPathGenerator.class.getResourceAsStream("/js/getXpath.js");
-            if (inputStream != null) {
-                Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                StringBuilder script = new StringBuilder();
-                int data;
-                while ((data = reader.read()) != -1) {
-                    script.append((char) data);
-                }
-                reader.close();
-                xpathScript = script.toString();
-            } else {
-                throw new RuntimeException("加载" + "/js/getXpath.js" + "脚本失败！");
+            if (inputStream == null) {
+                throw new RuntimeException("加载脚本失败: /js/getXpath.js");
             }
+            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            StringBuilder script = new StringBuilder();
+            int data;
+            while ((data = reader.read()) != -1) {
+                script.append((char) data);
+            }
+            reader.close();
+            xpathScript = script.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("加载脚本异常", e);
         }
+    }
+
+    public static void initData(){
+        xpathFuture = new CompletableFuture<>();
+        xpathListFuture = new CompletableFuture<>();
     }
 
     public static void getXpathBefore(String url, boolean isSingleElement) {
@@ -59,15 +65,14 @@ public class XPathGenerator extends Application {
         }
         inputUrl = url;
         isSingleElementParam = isSingleElement;
-        xpathList.clear();
+        initData();
+        isStart = true;
     }
 
-    public static String getXPathForUrl(String url) {
+    public static String getXPathForUrl(String url, Window owner) {
         getXpathBefore(url, true);
-        // 启动 JavaFX 应用程序
-        Application.launch(XPathGenerator.class);
+        Platform.runLater(() -> createAndShowWindow(owner));
         try {
-            // 等待 XPath 生成
             return xpathFuture.get();
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,12 +82,10 @@ public class XPathGenerator extends Application {
         }
     }
 
-    public static List<String> getXPathListForUrl(String url) {
+    public static List<String> getXPathListForUrl(String url, Window owner) {
         getXpathBefore(url, false);
-        // 启动 JavaFX 应用程序
-        Application.launch(XPathGenerator.class);
+        Platform.runLater(() -> createAndShowWindow(owner));
         try {
-            // 等待 XPath 生成
             return xpathListFuture.get();
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,56 +95,63 @@ public class XPathGenerator extends Application {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) {
+    private static void createAndShowWindow(Window owner) {
+        Stage newStage = new Stage();
+        newStage.initModality(Modality.WINDOW_MODAL);
+        newStage.initOwner(owner);
+        newStage.setTitle("XPath生成器");
+
         WebView webView = new WebView();
         WebEngine engine = webView.getEngine();
 
-        // 注入点击监听逻辑
         engine.getLoadWorker().stateProperty().addListener((_, _, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 injectXPathLogic(engine);
             }
         });
         engine.load(inputUrl);
-        primaryStage.setScene(new Scene(webView, 800, 600));
-        primaryStage.setTitle("XPath生成器");
 
-        // 添加窗口关闭事件监听器
-        primaryStage.setOnCloseRequest(event -> {
-            if (!isSingleElementParam) {
+        newStage.setScene(new Scene(webView, 800, 600));
+        newStage.setOnCloseRequest(event -> {
+            if (isSingleElementParam) {
+                if (!xpathFuture.isDone()) {
+                    xpathFuture.cancel(true); // 触发 get() 的 CancellationException
+                }
+            } else {
                 xpathListFuture.complete(xpathList);
             }
         });
-
-        primaryStage.show();
+        newStage.show();
     }
 
-    private void injectXPathLogic(WebEngine engine) {
+    private static void injectXPathLogic(WebEngine engine) {
         try {
             JSObject window = (JSObject) engine.executeScript("window");
             window.setMember("javaBridge", new JavaBridge());
             window.setMember("isSingleElement", isSingleElementParam);
-
-            if (xpathScript != null) {
-                engine.executeScript(xpathScript);
-            }
+            engine.executeScript(xpathScript);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Java 回调处理器
     public static class JavaBridge {
-        @SuppressWarnings("unused")
         public void onXPath(String xpath) {
-            // 完成 CompletableFuture 并关闭 JavaFX 应用程序
             if (isSingleElementParam) {
                 xpathFuture.complete(xpath);
-                Platform.exit();
+                closeWindow();
             } else {
                 xpathList.add(xpath);
             }
+        }
+
+        private void closeWindow() {
+            Platform.runLater(() -> {
+                Stage stage = (Stage) xpathFuture.thenApply(s -> null).getNow(null);
+                if (stage != null) {
+                    stage.close();
+                }
+            });
         }
     }
 }

@@ -28,7 +28,7 @@ public class AccessXpath {
     public void execute() {
         List<String> xpathList = new ArrayList<>();
         for (String url : this.urlList) {
-            xpathList.add(XPathGenerator.getXPathForUrl(url));
+//            xpathList.add(XPathGenerator.getXPathForUrl(url));
         }
         this.xpath = analyze(xpathList);
     }
