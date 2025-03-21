@@ -25,7 +25,7 @@
             <TextField promptText="输入XPath规则" GridPane.columnIndex="1" GridPane.rowIndex="2"
                        fx:id="xpathInputField"/>
 
-            <Button fx:id="getXpathBtn" prefWidth="80" text="获取规则" GridPane.rowIndex="3">
+            <Button fx:id="getXpathBtnOnAdd" prefWidth="80" text="获取规则" GridPane.rowIndex="3">
                 <tooltip>
                     <Tooltip text="使用可视化窗口获取当前网站的XPath解析规则"/>
                 </tooltip>
@@ -51,23 +51,40 @@
 
         <!-- 详情面板 -->
         <VBox fx:id="detailPanel" spacing="15" style="-fx-padding: 20px;" visible="false">
-            <Label style="-fx-font-weight: bold;" text="网站名称："/>
-            <Label fx:id="nameDisplayLabel"/>
 
-            <Label style="-fx-font-weight: bold;" text="网站URL："/>
-            <Label fx:id="urlDisplayLabel"/>
+
+            <VBox spacing="10">
+                <Label style="-fx-font-weight: bold;" text="网站名称："/>
+                <TextField fx:id="nameDisplayTextField" editable="false"/>
+
+                <Label style="-fx-font-weight: bold;" text="网站URL："/>
+                <TextField style="-fx-min-width: 300px;" fx:id="urlDisplayTextField" editable="false"/>
+
+                <Label style="-fx-font-weight: bold;" text="XPath规则："/>
+                <TextField style="-fx-min-width: 300px;" fx:id="xpathDisplayField" editable="false"/>
+            </VBox>
 
             <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-weight: bold;" text="XPath规则："/>
-                <TextField style="-fx-min-width: 300px;" fx:id="xpathDisplayField"/>
-                <Button fx:id="updateXpathBtnByUI" text="获取规则">
+                <Button fx:id="changeBtn" text="修改">
+                    <tooltip>
+                        <Tooltip text="修改当前选中的网站信息"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="getXpathOnDetail" text="获取规则" visible="false">
                     <tooltip>
                         <Tooltip text="使用可视化窗口获取当前网站的XPath解析规则"/>
                     </tooltip>
                 </Button>
-                <Button fx:id="updateXpathBtn" text="保存规则">
+                <Button fx:id="saveBtn" text="保存" visible="false">
                     <tooltip>
-                        <Tooltip text="更新当前网站的XPath解析规则"/>
+                        <Tooltip text="保存修改后的信息"/>
+                    </tooltip>
+                </Button>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Button fx:id="deleteBtn" text="删除网站" style="-fx-text-fill: #ff4444;">
+                    <tooltip>
+                        <Tooltip text="删除当前选中的网站配置"/>
                     </tooltip>
                 </Button>
             </HBox>

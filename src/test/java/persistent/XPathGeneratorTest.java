@@ -8,18 +8,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class XPathGeneratorTest extends Application {
-    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
         primaryStage.setTitle("XPath 测试程序");
 
         Button singleXPathButton = new Button("生成单个 XPath");
         Button listXPathButton = new Button("生成多个 XPath");
 
-        singleXPathButton.setOnAction(e -> testSingleXPath());
-        listXPathButton.setOnAction(e -> testListXPath());
+        singleXPathButton.setOnAction(_ -> testSingleXPath());
+        listXPathButton.setOnAction(_ -> testListXPath());
 
         VBox root = new VBox(10, singleXPathButton, listXPathButton);
         Scene scene = new Scene(root, 300, 200);

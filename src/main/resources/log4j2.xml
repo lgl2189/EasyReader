@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--OFF 表示不记录log4j2本身的日志 -->
+<configuration status="OFF">
+    <property name="LOG_LEVEL">INFO</property>
+</configuration>

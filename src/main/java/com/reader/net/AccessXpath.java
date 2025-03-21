@@ -1,8 +1,5 @@
 package com.reader.net;
 
-import javafx.stage.Stage;
-import javafx.stage.Window;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * @author      ：李冠良
- * @description ：无描述
+ * @description ：AccessXpath类，用于获取XPath。此类的execute方法建议在后台线程中执行，否则会导致UI线程死锁，既无法打开Xpath获取对话框，也无法继续执行UI线程。
  * @date        ：2025 2月 26 15:57
  */
 
@@ -41,24 +38,22 @@ public class AccessXpath {
     }
 
     public void execute() {
-        CompletableFuture.runAsync(() -> {
-            List<String> xpathList = new ArrayList<>();
-            for (String url : this.urlList) {
-                if (isSingleElement) {
-                    String resultStr = XPathGenerator.getXPathForUrl(url);
-                    if (resultStr != null) {
-                        xpathList.add(resultStr);
-                    }
-                }
-                else {
-                    List<String> resultList = XPathGenerator.getXPathListForUrl(url);
-                    if (resultList != null) {
-                        xpathList.addAll(resultList);
-                    }
+        List<String> xpathList = new ArrayList<>();
+        for (String url : this.urlList) {
+            if (isSingleElement) {
+                String resultStr = XPathGenerator.getXPathForUrl(url);
+                if (resultStr != null) {
+                    xpathList.add(resultStr);
                 }
             }
-            this.xpath = analyze(xpathList);
-        });
+            else {
+                List<String> resultList = XPathGenerator.getXPathListForUrl(url);
+                if (resultList != null) {
+                    xpathList.addAll(resultList);
+                }
+            }
+        }
+        this.xpath = analyze(xpathList);
     }
 
     private String analyze(List<String> xpathList) {
