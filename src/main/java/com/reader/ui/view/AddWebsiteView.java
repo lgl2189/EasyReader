@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import vjson.pl.ast.Access;
 
 public class AddWebsiteView {
     // 左侧组件
@@ -108,7 +107,9 @@ public class AddWebsiteView {
             }
         });
         // 更新XPath按钮
-        updateXpathBtnByUI.setOnAction(_ -> xpathDisplayField.setText(getXpathRule(urlDisplayLabel.getText().trim())));
+        updateXpathBtnByUI.setOnAction(_ -> xpathDisplayField.setText(getXpathRule(
+                urlDisplayLabel.getText().trim())
+        ));
         updateXpathBtn.setOnAction(_ -> handleUpdateWebsite());
 
     }
@@ -164,7 +165,7 @@ public class AddWebsiteView {
     }
 
     private String getXpathRule(String url) {
-        if (url == null || url.isEmpty()){
+        if (url == null || url.isEmpty()) {
             return "";
         }
         AccessXpath accessXpath = new AccessXpath(url);

@@ -7,7 +7,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import netscape.javascript.JSObject;
 
 import java.io.InputStream;
@@ -64,14 +63,17 @@ public class XPathGenerator {
             throw new RuntimeException("XPathGenerator 类同时只能有一个线程使用！");
         }
         inputUrl = url;
+        if(!inputUrl.startsWith("https://") && !inputUrl.startsWith("http://")){
+            inputUrl = "https://" + inputUrl;
+        }
         isSingleElementParam = isSingleElement;
         initData();
         isStart = true;
     }
 
-    public static String getXPathForUrl(String url, Window owner) {
+    public static String getXPathForUrl(String url) {
         getXpathBefore(url, true);
-        Platform.runLater(() -> createAndShowWindow(owner));
+        Platform.runLater(() -> createAndShowWindow());
         try {
             return xpathFuture.get();
         } catch (Exception e) {
@@ -82,9 +84,9 @@ public class XPathGenerator {
         }
     }
 
-    public static List<String> getXPathListForUrl(String url, Window owner) {
+    public static List<String> getXPathListForUrl(String url) {
         getXpathBefore(url, false);
-        Platform.runLater(() -> createAndShowWindow(owner));
+        Platform.runLater(XPathGenerator::createAndShowWindow);
         try {
             return xpathListFuture.get();
         } catch (Exception e) {
@@ -95,10 +97,9 @@ public class XPathGenerator {
         }
     }
 
-    private static void createAndShowWindow(Window owner) {
+    private static void createAndShowWindow() {
         Stage newStage = new Stage();
         newStage.initModality(Modality.WINDOW_MODAL);
-        newStage.initOwner(owner);
         newStage.setTitle("XPath生成器");
 
         WebView webView = new WebView();

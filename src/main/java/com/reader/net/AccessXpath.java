@@ -1,9 +1,13 @@
 package com.reader.net;
 
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author      ：李冠良
@@ -15,10 +19,21 @@ import java.util.Map;
 public class AccessXpath {
     private final List<String> urlList;
     private String xpath;
+    private boolean isSingleElement = false;
 
-    public AccessXpath(String urlList) {
+    public AccessXpath(String url, boolean isSingleElement) {
+        this(url);
+        this.isSingleElement = isSingleElement;
+    }
+
+    public AccessXpath(List<String> urlList, boolean isSingleElement) {
+        this(urlList);
+        this.isSingleElement = isSingleElement;
+    }
+
+    public AccessXpath(String url) {
         this.urlList = new ArrayList<>();
-        this.urlList.add(urlList);
+        this.urlList.add(url);
     }
 
     public AccessXpath(List<String> urlList) {
@@ -26,11 +41,24 @@ public class AccessXpath {
     }
 
     public void execute() {
-        List<String> xpathList = new ArrayList<>();
-        for (String url : this.urlList) {
-//            xpathList.add(XPathGenerator.getXPathForUrl(url));
-        }
-        this.xpath = analyze(xpathList);
+        CompletableFuture.runAsync(() -> {
+            List<String> xpathList = new ArrayList<>();
+            for (String url : this.urlList) {
+                if (isSingleElement) {
+                    String resultStr = XPathGenerator.getXPathForUrl(url);
+                    if (resultStr != null) {
+                        xpathList.add(resultStr);
+                    }
+                }
+                else {
+                    List<String> resultList = XPathGenerator.getXPathListForUrl(url);
+                    if (resultList != null) {
+                        xpathList.addAll(resultList);
+                    }
+                }
+            }
+            this.xpath = analyze(xpathList);
+        });
     }
 
     private String analyze(List<String> xpathList) {

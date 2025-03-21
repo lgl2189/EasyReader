@@ -1,11 +1,11 @@
 package persistent;
 
 import com.reader.net.XPathGenerator;
+import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.application.Application;
-import javafx.scene.control.Button;
 
 public class XPathGeneratorTest extends Application {
     private Stage primaryStage;
@@ -30,7 +30,7 @@ public class XPathGeneratorTest extends Application {
     private void testSingleXPath() {
         String url = "https://www.baidu.com"; // 替换为实际测试页面 URL
         new Thread(() -> {
-            String xpath = XPathGenerator.getXPathForUrl(url, primaryStage.getOwner());
+            String xpath = XPathGenerator.getXPathForUrl(url);
             System.out.println("生成的单个 XPath: " + xpath);
         }).start();
     }
@@ -38,7 +38,7 @@ public class XPathGeneratorTest extends Application {
     private void testListXPath() {
         String url = "https://www.baidu.com"; // 替换为实际测试页面 URL
         new Thread(() -> {
-            var xpathList = XPathGenerator.getXPathListForUrl(url, primaryStage.getOwner());
+            var xpathList = XPathGenerator.getXPathListForUrl(url);
             System.out.println("Final XPath List Length: " + xpathList.size());
             System.out.println("Final XPath List:\n: " + xpathList);
         }).start();
