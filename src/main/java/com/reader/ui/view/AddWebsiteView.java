@@ -1,7 +1,7 @@
 package com.reader.ui.view;
 
 import com.reader.entity.storage.Website;
-import com.reader.util.UrlBasedIdGenerator;
+import com.reader.util.IdGenerator;
 import com.reader.net.AccessXpath;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
@@ -151,7 +151,7 @@ public class AddWebsiteView {
 
     private void handleAddWebsite() {
         Website newWebsite = new Website(
-                UrlBasedIdGenerator.generateId(urlInputField.getText().trim()),
+                IdGenerator.generateId(urlInputField.getText().trim()),
                 urlInputField.getText().trim(),
                 nameInputField.getText().trim(),
                 xpathInputField.getText().trim()

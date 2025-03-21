@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class UrlBasedIdGenerator {
+public class IdGenerator {
 
     /**
      * 生成唯一ID，格式：{域名}_{时间戳}_{随机字符串}
