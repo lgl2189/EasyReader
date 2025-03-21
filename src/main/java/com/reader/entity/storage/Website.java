@@ -54,4 +54,14 @@ public class Website implements Serializable {
     public void setXpath(String xpath) {
         this.xpath = xpath;
     }
+
+    @Override
+    public String toString() {
+        return "Website{" +
+                "id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                ", name='" + name + '\'' +
+                ", xpath='" + xpath + '\'' +
+                '}';
+    }
 }

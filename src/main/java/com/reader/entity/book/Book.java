@@ -1,5 +1,7 @@
 package com.reader.entity.book;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,9 @@ import java.util.List;
  */
 
 
-public class Book {
+public class Book implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6781188410202061160L;
 
     private String bookName;
     private String author;

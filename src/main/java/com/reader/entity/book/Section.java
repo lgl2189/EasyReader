@@ -2,6 +2,8 @@ package com.reader.entity.book;
 
 import com.reader.entity.util.Pair;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -13,7 +15,11 @@ import java.util.NoSuchElementException;
  */
 
 
-public class Section {
+public class Section implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6798075894744359187L;
+
 
     private int illustrationNextIndex = 1;
 
