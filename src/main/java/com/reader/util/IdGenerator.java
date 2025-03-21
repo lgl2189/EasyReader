@@ -11,7 +11,7 @@ public class IdGenerator {
      * @param url 原始网址（如 "https://www.example.com/path"）
      * @return 唯一ID（如 "example.com_656f3a7d_k5gT9pL2"）
      */
-    public static String generateId(String url) {
+    public static String generateUrlId(String url) {
         // 1. 处理网址部分：提取并标准化域名
         String domain = extractDomain(url);
         // 2. 生成时间戳部分：Base64编码的当前秒级时间戳
@@ -54,6 +54,6 @@ public class IdGenerator {
     // 示例用法
     public static void main(String[] args) {
         String url = "https://www.example.com/path?query=123";
-        System.out.println(generateId(url)); // 输出示例: example.com_ZvTk_k5gT
+        System.out.println(generateUrlId(url)); // 输出示例: example.com_ZvTk_k5gT
     }
 }

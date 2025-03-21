@@ -1,5 +1,6 @@
 package com.reader.storage.common.impl;
 
+import com.reader.storage.common.DataUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -165,6 +166,12 @@ public class ByteDepository extends CommonDepository<byte[]> {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getValueFilePath(String key) {
+        int prefixPathLength = depositoryPathLength + File.separator.length();
+        key = DataUtil.cleanFileName(key, prefixPathLength);
+        return depositoryPath + File.separator + key;
     }
 
     @Override

@@ -46,9 +46,4 @@ public abstract class CommonDepository<T> implements DataDepository<T> {
         return depositoryName;
     }
 
-    public String getValueFilePath(String key) {
-        int prefixPathLength = depositoryPathLength + File.separator.length();
-        key = DataUtil.cleanFileName(key, prefixPathLength);
-        return depositoryPath + File.separator + key;
-    }
 }

@@ -1,5 +1,8 @@
 package com.reader.storage.common.impl;
 
+import com.reader.storage.common.DataUtil;
+import org.apache.commons.io.FileUtils;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +64,7 @@ public class ObjectDepository extends CommonDepository<Object> {
     @Override
     public void add(String key, Object value, boolean isOverwrite) {
         validateKey(key);
+        key = cleanFileName(key);
         File file = getFileForKey(key);
         if(file.exists()){
             if(isOverwrite){
@@ -161,5 +165,12 @@ public class ObjectDepository extends CommonDepository<Object> {
         if (key.contains(File.separator) || key.contains("/") || key.contains("\\")) {
             throw new IllegalArgumentException("key中包含文件路径分隔符");
         }
+    }
+
+    public String cleanFileName(String input) {
+        // 定义在 Windows 文件名中不允许出现的字符的正则表达式
+        String invalidChars = "[\\\\/:*?\"<>|]";
+        // 使用空字符串替换所有不允许的字符
+        return input.replaceAll(invalidChars, "_");
     }
 }

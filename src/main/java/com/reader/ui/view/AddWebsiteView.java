@@ -151,7 +151,7 @@ public class AddWebsiteView {
 
     private void handleAddWebsite() {
         Website newWebsite = new Website(
-                IdGenerator.generateId(urlInputField.getText().trim()),
+                IdGenerator.generateUrlId(urlInputField.getText().trim()),
                 urlInputField.getText().trim(),
                 nameInputField.getText().trim(),
                 xpathInputField.getText().trim()
