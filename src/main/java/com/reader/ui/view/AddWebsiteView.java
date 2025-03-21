@@ -1,7 +1,7 @@
 package com.reader.ui.view;
 
 import com.reader.entity.storage.Website;
-import com.reader.entity.util.UrlBasedIdGenerator;
+import com.reader.util.UrlBasedIdGenerator;
 import com.reader.net.AccessXpath;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
@@ -11,7 +11,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 

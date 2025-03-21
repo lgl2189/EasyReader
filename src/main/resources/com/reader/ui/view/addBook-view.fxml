@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<SplitPane dividerPositions="0.3" xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.reader.ui.view.AddBookView">
+
+    <!-- 左侧区域 -->
+    <VBox spacing="10" style="-fx-padding: 15px;">
+        <Button fx:id="addBookBtn" text="添加新书" />
+        <ListView fx:id="bookListView" VBox.vgrow="ALWAYS" />
+    </VBox>
+
+    <!-- 右侧区域 -->
+    <StackPane>
+        <!-- 添加表单 -->
+        <GridPane fx:id="addFormPane">
+            <Label text="书籍名称:" GridPane.rowIndex="0" />
+            <TextField fx:id="nameInputField" promptText="输入书籍名称" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="书籍链接:" GridPane.rowIndex="1" />
+            <TextField fx:id="urlInputField" promptText="输入书籍链接" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Button fx:id="confirmAddBtn" text="添加书籍" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                <tooltip>
+                    <Tooltip text="点击保存新的书籍配置" />
+                </tooltip>
+            </Button>
+
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" />
+                <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+
+        <!-- 详情面板（留空） -->
+        <VBox fx:id="detailPanel" spacing="15" style="-fx-padding: 20px;" visible="false">
+            <!-- 可在此处添加书籍详情组件 -->
+        </VBox>
+    </StackPane>
+</SplitPane>

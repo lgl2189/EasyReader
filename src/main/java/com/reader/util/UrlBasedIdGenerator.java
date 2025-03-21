@@ -1,4 +1,4 @@
-package com.reader.entity.util;
+package com.reader.util;
 
 import java.time.Instant;
 import java.util.Base64;
