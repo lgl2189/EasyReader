@@ -1,4 +1,4 @@
-package com.reader.net;
+package com.reader.net.webpage;
 
 import java.util.ArrayList;
 import java.util.HashMap;

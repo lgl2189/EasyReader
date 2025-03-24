@@ -1,4 +1,4 @@
-package com.reader.net;
+package com.reader.net.webpage;
 
 import javafx.application.Platform;
 import javafx.concurrent.Worker;

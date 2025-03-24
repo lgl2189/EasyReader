@@ -222,18 +222,16 @@ public class AccessWebPageContent {
     /**
      * 此方法会在 JavaFX 的 {@link javafx.stage.Stage} 成功显示之后执行。它被设计为可被子类重写，
      * 旨在让子类能够在 Stage 显示后执行额外的异步操作，例如发起网络请求、进行耗时的数据加载等。
-     *
+     * <p>
      * 方法返回一个 {@link java.util.concurrent.CompletableFuture} 对象，这表明它支持异步操作。
      * 子类在重写此方法时，可以在其中进行耗时的操作，然后通过 {@link java.util.concurrent.CompletableFuture}
      * 来管理操作的结果和状态。
      *
      * @return 返回一个 {@link java.util.concurrent.CompletableFuture} 对象，该对象代表异步操作的结果。
-     *         异步操作完成后，该对象会包含操作结果。如果子类重写此方法时不进行异步操作，
-     *         也可以返回 null，但通常建议返回一个已完成的 {@link java.util.concurrent.CompletableFuture} 对象。
-     *
+     * 异步操作完成后，该对象会包含操作结果。如果子类重写此方法时不进行异步操作，
+     * 也可以返回 null，但通常建议返回一个已完成的 {@link java.util.concurrent.CompletableFuture} 对象。
      * @implNote 默认实现返回 null。子类重写时，若有异步操作，需要创建并返回合适的
-     *           {@link java.util.concurrent.CompletableFuture} 对象以正确管理异步操作的结果和状态。
-     *
+     * {@link java.util.concurrent.CompletableFuture} 对象以正确管理异步操作的结果和状态。
      * @example 以下是一个子类重写此方法进行异步数据加载的示例：
      * <pre>
      * {@code
@@ -253,7 +251,6 @@ public class AccessWebPageContent {
      * }
      * }
      * </pre>
-     *
      * @see #run() 此方法会在 {@link #run()} 方法的执行流程中，Stage 显示后被调用。
      */
     protected CompletableFuture<?> afterShowStage() {

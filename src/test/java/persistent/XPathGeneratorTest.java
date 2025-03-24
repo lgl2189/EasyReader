@@ -1,6 +1,6 @@
 package persistent;
 
-import com.reader.net.XPathGenerator;
+import com.reader.net.webpage.XPathGenerator;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

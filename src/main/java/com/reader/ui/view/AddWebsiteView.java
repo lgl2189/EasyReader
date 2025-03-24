@@ -2,7 +2,7 @@ package com.reader.ui.view;
 
 import com.reader.entity.storage.Website;
 import com.reader.util.IdGenerator;
-import com.reader.net.AccessXpath;
+import com.reader.net.webpage.AccessXpath;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
 import com.reader.ui.util.NotificationUtil;
