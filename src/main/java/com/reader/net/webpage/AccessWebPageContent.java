@@ -36,6 +36,7 @@ public class AccessWebPageContent {
 
     /**
      * 加载指定路径的 JavaScript 脚本，需要在子类的静态代码块中调用。如果未指定脚本路径，将不注入 JavaScript 脚本。
+     * 路径从当前类的资源目录开始，以 "/" 开头。
      * 如果脚本路径为空，将抛出 NullPointerException。
      * 如果加载脚本失败，将抛出 RuntimeException。
      *
@@ -43,7 +44,7 @@ public class AccessWebPageContent {
      * @throws RuntimeException     如果加载脚本过程中出现异常
      * @see #scriptContent
      */
-    private static void loadScript(String scriptPath) {
+    protected static void loadScript(String scriptPath) {
         if (scriptPath == null || scriptPath.isEmpty()) {
             throw new NullPointerException("脚本路径不能为空");
         }
