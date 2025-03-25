@@ -1,5 +1,6 @@
 package com.reader.net.webpage;
 
+import com.reader.ui.util.JavaScriptUtil;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
@@ -24,11 +25,11 @@ import java.util.concurrent.CompletableFuture;
  * 这个类提供了一些方法供子类调用，包括 {@link #injectScript(WebEngine)} 方法，
  * 可以注入 JavaScript 脚本，以实现更丰富的功能。
  * 这个类还提供了一些方法供子类重写，允许子类在生命周期中进行额外操作，
- * 以实现更复杂的功能，这些方法包括 {@link #beforeCreateStage()}、
- * {@link #setStageAttribute()}、{@link #onCloseStage()} 和 {@link #afterShowStage()}。
+ * 以实现更复杂的功能，这些方法包括 {@link #beforeCreateStage}、
+ * {@link #setStageAttribute}、{@link #onCloseStage} 和 {@link #afterShowStage}。
  * @date ：2025 3月 24 10:15
  */
-public class AccessWebPageContent {
+public class AccessWebPage {
     protected static String scriptContent;
     protected String inputUrl;
     private static String stageTitle = "网页访问器";
@@ -45,26 +46,7 @@ public class AccessWebPageContent {
      * @see #scriptContent
      */
     protected static void loadScript(String scriptPath) {
-        if (scriptPath == null || scriptPath.isEmpty()) {
-            throw new NullPointerException("脚本路径不能为空");
-        }
-        try (InputStream inputStream = AccessWebPageContent.class.getResourceAsStream(scriptPath)) {
-            if (inputStream == null) {
-                throw new NullPointerException("加载脚本失败: " + scriptPath);
-            }
-            StringBuilder script;
-            try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-                script = new StringBuilder();
-                int data;
-                while ((data = reader.read()) != -1) {
-                    script.append((char) data);
-                }
-            }
-            scriptContent = script.toString();
-        }
-        catch (Exception e) {
-            throw new RuntimeException("加载脚本时发生IO异常", e);
-        }
+        scriptContent = JavaScriptUtil.loadScript(scriptPath);
     }
 
     /**
@@ -73,7 +55,7 @@ public class AccessWebPageContent {
      * @param inputUrl 要访问的网页的 URL
      * @see #init(String)
      */
-    public AccessWebPageContent(String inputUrl) {
+    public AccessWebPage(String inputUrl) {
         this.inputUrl = inputUrl;
         init(inputUrl);
     }
@@ -125,7 +107,8 @@ public class AccessWebPageContent {
      * 初始化 {@link javafx.stage.Stage} 的属性，创建 {@link javafx.scene.web.WebView} 和导航按钮，加载指定的 URL，并监听页面加载状态。
      * 当页面加载成功时，注入 JavaScript 脚本。
      *
-     * @see #setStageAttribute()
+     * @see #setStageAttribute(Stage)
+     * @see #setWebViewAttribute(WebView)
      * @see #injectScript(WebEngine)
      * @see #inputUrl
      */
@@ -170,10 +153,13 @@ public class AccessWebPageContent {
                 injectScript(engine);
             }
         });
+
+        setStageAttribute(webpageStage);
+        setWebViewAttribute(webView);
+
         engine.load(inputUrl);
         webpageStage.setScene(new Scene(root));
         webpageStage.setOnCloseRequest(_ -> onCloseStage());
-        setStageAttribute();
         webpageStage.show();
         isStart = true;
     }
@@ -207,9 +193,19 @@ public class AccessWebPageContent {
     /**
      * 设置 {@link javafx.stage.Stage} 的属性，供子类重写以进行额外操作。
      *
+     * @param stage 要设置属性的 {@link javafx.stage.Stage}
      * @see #createStage()
      */
-    protected void setStageAttribute() {
+    protected void setStageAttribute(Stage stage) {
+    }
+
+    /**
+     * 设置 {@link javafx.scene.web.WebView} 的属性，供子类重写以进行额外操作。
+     *
+     * @param webView 要设置属性的 {@link javafx.scene.web.WebView}
+     */
+    protected void setWebViewAttribute(WebView webView) {
+
     }
 
     /**
@@ -258,6 +254,16 @@ public class AccessWebPageContent {
         return null;
     }
 
+
+    /**
+     * 向 {@link javafx.scene.web.WebEngine} 供子类重写，在注入 JavaScript 脚本之前执行，以实现额外的注入逻辑。
+     *
+     * @param engine 要注入脚本的 {@link javafx.scene.web.WebEngine}
+     * @see #createStage()
+     */
+    protected void beforeInjectScript(WebEngine engine) {
+    }
+
     /**
      * 向 {@link javafx.scene.web.WebEngine} 注入 JavaScript 脚本。
      *
@@ -267,15 +273,6 @@ public class AccessWebPageContent {
     private void injectScript(WebEngine engine) {
         beforeInjectScript(engine);
         engine.executeScript(scriptContent);
-    }
-
-    /**
-     * 向 {@link javafx.scene.web.WebEngine} 供子类重写，在注入 JavaScript 脚本之前执行，以实现额外的注入逻辑。
-     *
-     * @param engine 要注入脚本的 {@link javafx.scene.web.WebEngine}
-     * @see #createStage()
-     */
-    protected void beforeInjectScript(WebEngine engine) {
     }
 
     /**

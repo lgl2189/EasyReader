@@ -1,6 +1,6 @@
 package persistent;
 
-import com.reader.net.webpage.AccessWebPageContent;
+import com.reader.net.webpage.AccessWebPage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -15,8 +15,8 @@ public class AccessWebPageContentTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        AccessWebPageContent accessWebPageContent = new AccessWebPageContent("www.baidu.com");
-        accessWebPageContent.run();
+        AccessWebPage accessWebPage = new AccessWebPage("www.baidu.com");
+        accessWebPage.run();
     }
 
     public static void main(String[] args) {
