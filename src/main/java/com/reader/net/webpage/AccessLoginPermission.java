@@ -1,5 +1,6 @@
 package com.reader.net.webpage;
 
+import com.reader.storage.common.impl.ObjectDepository;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
@@ -21,9 +22,32 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * @author      ：李冠良
+ * @author ：李冠良
  * @description ：这个类不允许多线程启动，同时只能有一个线程在使用这个类。否则会抛出运行时错误。
  */
-public class AccessLoginPermission {
+public class AccessLoginPermission extends AccessWebPageContent {
+
+
+    static {
+        loadScript("/js/accessLoginPermission.js");
+    }
+
+    /**
+     * 构造函数，初始化输入的 URL 并进行必要的初始化操作。
+     *
+     * @param inputUrl 要访问的网页的 URL
+     * @see #init(String)
+     */
+    public AccessLoginPermission(String inputUrl) {
+        super(inputUrl);
+    }
+
+    private class FutureWrapper implements AccessWebPageContent.FutureWrapper{
+
+    }
+
+    private class JavaBridge implements AccessWebPageContent.JavaBridge {
+
+    }
 
 }

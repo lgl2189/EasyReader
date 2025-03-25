@@ -277,4 +277,18 @@ public class AccessWebPageContent {
      */
     protected void beforeInjectScript(WebEngine engine) {
     }
+
+    /**
+     * 用于包装 {@link java.util.concurrent.CompletableFuture} 对象，方便同时获取多个{@link java.util.concurrent.CompletableFuture}的结果。
+     */
+    protected interface FutureWrapper {
+
+    }
+
+    /**
+     * 用于包装 Java 代码和 JavaScript 代码之间的通信接口。
+     */
+    protected interface JavaBridge {
+
+    }
 }
