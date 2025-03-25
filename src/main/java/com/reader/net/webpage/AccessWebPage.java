@@ -149,9 +149,9 @@ public class AccessWebPage {
                 injectScript(engine);
             }
         });
-
-        doWithStage(webpageStage);
-        doWithWebView(webView);
+        ContextWrapper contextWrapper = new ContextWrapper(webView,webpageStage);
+        doWithStage(contextWrapper);
+        doWithWebView(contextWrapper);
 
         engine.load(inputUrl);
         webpageStage.setScene(new Scene(root));
@@ -192,7 +192,7 @@ public class AccessWebPage {
      * @param stage 要设置属性的 {@link javafx.stage.Stage}
      * @see #createStage()
      */
-    protected void doWithStage(Stage stage) {
+    protected void doWithStage(ContextWrapper context) {
     }
 
     /**
@@ -200,7 +200,7 @@ public class AccessWebPage {
      *
      * @param webView 要设置属性的 {@link javafx.scene.web.WebView}
      */
-    protected void doWithWebView(WebView webView) {
+    protected void doWithWebView(ContextWrapper context) {
 
     }
 
@@ -269,6 +269,24 @@ public class AccessWebPage {
     private void injectScript(WebEngine engine) {
         beforeInjectScript(engine);
         engine.executeScript(scriptContent);
+    }
+
+    protected static class ContextWrapper{
+        private final WebView  webView;
+        private final Stage stage;
+
+        public ContextWrapper(WebView webView, Stage stage) {
+            this.webView = webView;
+            this.stage = stage;
+        }
+
+        public WebView getWebView() {
+            return webView;
+        }
+
+        public Stage getStage() {
+            return stage;
+        }
     }
 
     /**

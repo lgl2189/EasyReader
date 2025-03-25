@@ -42,8 +42,9 @@ public class AccessWebPageWithMenu extends AccessWebPage {
     }
 
     @Override
-    protected void doWithWebView(WebView webView) {
-        super.doWithWebView(webView);
+    protected void doWithWebView(ContextWrapper context) {
+        super.doWithWebView(context);
+        WebView webView = context.getWebView();
         WebEngine webEngine = webView.getEngine();
         webView.setContextMenuEnabled(true);
         // 监听右键点击事件
