@@ -1,11 +1,16 @@
 package com.reader.net.webpage;
 
+import com.reader.ui.util.JavaScriptUtil;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
@@ -21,11 +26,11 @@ import java.util.List;
 
 public class AccessWebPageWithMenu extends AccessWebPage {
 
-    private String menuScript;
+    private static final String menuScript;
     private final List<MenuItem> menuItemList = new ArrayList<>();
 
-    static{
-
+    static {
+        menuScript = JavaScriptUtil.loadScript("/js/browserMenu.js");
     }
 
     /**
@@ -41,30 +46,31 @@ public class AccessWebPageWithMenu extends AccessWebPage {
     @Override
     protected void setWebViewAttribute(WebView webView) {
         super.setWebViewAttribute(webView);
-        // 禁用默认菜单
-        webView.setContextMenuEnabled(false);
+        WebEngine webEngine = webView.getEngine();
+        webView.setContextMenuEnabled(true);
         // 监听右键点击事件
         webView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
                 showCustomContextMenu(webView, event.getScreenX(), event.getScreenY());
-                event.consume();
             }
         });
 
         // 注入JS禁用网页右键
-        webView.getEngine().getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+        JavaBridge javaBridge = new JavaBridge();
+        webEngine.getLoadWorker().stateProperty().addListener((_, _, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
-                JSObject window = (JSObject) webView.getEngine().executeScript("window");
-                window.setMember("javaBridge", new JavaBridge());
-
-                webView.getEngine().executeScript(
-                        "document.addEventListener('contextmenu', function(e) {" +
-                                "   var elementType = e.target.tagName.toLowerCase();" +
-                                "   window.javaBridge.showMenu(elementType);" +
-                                "   e.preventDefault();" +
-                                "});"
-                );
+                bindJavaBridge(webEngine, javaBridge);
             }
+        });
+        // 新增：监听WebView尺寸变化，重新绑定JavaBridge
+    }
+
+    private void bindJavaBridge(WebEngine webEngine, JavaBridge javaBridge) {
+        // 在Platform.runLater中绑定JavaBridge，确保JavaBridge在UI线程中执行，否则可能出现javafx监听器和js监听器不一致的问题，js监听器可能无法生效
+        Platform.runLater(() -> {
+            JSObject window = (JSObject) webEngine.executeScript("window");
+            window.setMember("javaBridge", javaBridge);
+            webEngine.executeScript(menuScript);
         });
     }
 
@@ -83,7 +89,7 @@ public class AccessWebPageWithMenu extends AccessWebPage {
         menuItemList.add(menuItem);
     }
 
-    protected class JavaBridge implements AccessWebPage.JavaBridge {
+    protected static class JavaBridge implements AccessWebPage.JavaBridge {
         public void showMenu(String elementType) {
             // 可根据elementType（如"a", "img"）动态调整菜单
             System.out.println("右键点击元素类型: " + elementType);
