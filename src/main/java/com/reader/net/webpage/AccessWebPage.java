@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
  * 可以注入 JavaScript 脚本，以实现更丰富的功能。
  * 这个类还提供了一些方法供子类重写，允许子类在生命周期中进行额外操作，
  * 以实现更复杂的功能，这些方法包括 {@link #beforeCreateStage}、
- * {@link #setStageAttribute}、{@link #onCloseStage} 和 {@link #afterShowStage}。
+ * {@link #doWithStage}、{@link #onCloseStage} 和 {@link #afterShowStage}。
  * @date ：2025 3月 24 10:15
  */
 public class AccessWebPage {
@@ -103,8 +103,8 @@ public class AccessWebPage {
      * 初始化 {@link javafx.stage.Stage} 的属性，创建 {@link javafx.scene.web.WebView} 和导航按钮，加载指定的 URL，并监听页面加载状态。
      * 当页面加载成功时，注入 JavaScript 脚本。
      *
-     * @see #setStageAttribute(Stage)
-     * @see #setWebViewAttribute(WebView)
+     * @see #doWithStage(Stage)
+     * @see #doWithWebView(WebView)
      * @see #injectScript(WebEngine)
      * @see #inputUrl
      */
@@ -150,8 +150,8 @@ public class AccessWebPage {
             }
         });
 
-        setStageAttribute(webpageStage);
-        setWebViewAttribute(webView);
+        doWithStage(webpageStage);
+        doWithWebView(webView);
 
         engine.load(inputUrl);
         webpageStage.setScene(new Scene(root));
@@ -192,7 +192,7 @@ public class AccessWebPage {
      * @param stage 要设置属性的 {@link javafx.stage.Stage}
      * @see #createStage()
      */
-    protected void setStageAttribute(Stage stage) {
+    protected void doWithStage(Stage stage) {
     }
 
     /**
@@ -200,7 +200,7 @@ public class AccessWebPage {
      *
      * @param webView 要设置属性的 {@link javafx.scene.web.WebView}
      */
-    protected void setWebViewAttribute(WebView webView) {
+    protected void doWithWebView(WebView webView) {
 
     }
 

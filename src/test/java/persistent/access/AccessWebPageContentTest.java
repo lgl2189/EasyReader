@@ -1,4 +1,4 @@
-package persistent;
+package persistent.access;
 
 import com.reader.net.webpage.AccessWebPage;
 import javafx.application.Application;

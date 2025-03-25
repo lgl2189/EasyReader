@@ -1,8 +1,5 @@
 package com.reader.storage.common.impl;
 
-import com.reader.storage.common.DataUtil;
-import org.apache.commons.io.FileUtils;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;

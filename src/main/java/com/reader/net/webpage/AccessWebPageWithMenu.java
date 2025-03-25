@@ -2,8 +2,6 @@ package com.reader.net.webpage;
 
 import com.reader.ui.util.JavaScriptUtil;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
@@ -44,8 +42,8 @@ public class AccessWebPageWithMenu extends AccessWebPage {
     }
 
     @Override
-    protected void setWebViewAttribute(WebView webView) {
-        super.setWebViewAttribute(webView);
+    protected void doWithWebView(WebView webView) {
+        super.doWithWebView(webView);
         WebEngine webEngine = webView.getEngine();
         webView.setContextMenuEnabled(true);
         // 监听右键点击事件

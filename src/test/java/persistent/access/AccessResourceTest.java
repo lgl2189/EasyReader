@@ -1,4 +1,4 @@
-package persistent;
+package persistent.access;
 
 import com.reader.entity.net.ResponseData;
 import com.reader.net.AccessResource;
