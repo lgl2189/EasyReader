@@ -18,7 +18,8 @@ import java.util.concurrent.CompletableFuture;
  * @author ：李冠良
  * @description ：访问网页内容的基类，提供基本的功能和接口。
  * 执行 {@link #run()} 方法，只会打开一个 {@link javafx.stage.Stage}，并加载指定的网页，不会进行任何其他操作。
- * 这个类提供了一些方法供子类调用，包括 {@link #injectScript(WebEngine)} 方法，
+ * 这个类提供了一些方法供子类调用，包括 {@link #injectScript(WebEngine)} 方法。
+ * 子类可以定义自己的方法，通过调用{@link #run()}方法启动网页访问，并在自己的方法中进行返回结果等操作，比如返回一个CompletableFuture对象。
  * 可以注入 JavaScript 脚本，以实现更丰富的功能。
  * 这个类还提供了一些方法供子类重写，允许子类在生命周期中进行额外操作，
  * 以实现更复杂的功能，这些方法包括 {@link #beforeCreateStage}、
@@ -26,9 +27,9 @@ import java.util.concurrent.CompletableFuture;
  * @date ：2025 3月 24 10:15
  */
 public class AccessWebPage {
+    private static String stageTitle = "网页访问器";
     protected static String scriptContent;
     protected String inputUrl;
-    private static String stageTitle = "网页访问器";
     protected boolean isStart = false;
 
     /**
@@ -103,8 +104,8 @@ public class AccessWebPage {
      * 初始化 {@link javafx.stage.Stage} 的属性，创建 {@link javafx.scene.web.WebView} 和导航按钮，加载指定的 URL，并监听页面加载状态。
      * 当页面加载成功时，注入 JavaScript 脚本。
      *
-     * @see #doWithStage(Stage)
-     * @see #doWithWebView(WebView)
+     * @see #doWithStage(ContextWrapper)
+     * @see #doWithWebView(ContextWrapper)
      * @see #injectScript(WebEngine)
      * @see #inputUrl
      */
@@ -149,7 +150,7 @@ public class AccessWebPage {
                 injectScript(engine);
             }
         });
-        ContextWrapper contextWrapper = new ContextWrapper(webView,webpageStage);
+        ContextWrapper contextWrapper = new ContextWrapper(webView, webpageStage);
         doWithStage(contextWrapper);
         doWithWebView(contextWrapper);
 
@@ -188,8 +189,9 @@ public class AccessWebPage {
 
     /**
      * 设置 {@link javafx.stage.Stage} 的属性，供子类重写以进行额外操作。
+     * 这个方法本身就在javafx的UI线程，在其中无需使用Platform.runLater无需使用
      *
-     * @param stage 要设置属性的 {@link javafx.stage.Stage}
+     * @param context 要设置属性的 {@link AccessWebPage.ContextWrapper}
      * @see #createStage()
      */
     protected void doWithStage(ContextWrapper context) {
@@ -197,8 +199,9 @@ public class AccessWebPage {
 
     /**
      * 设置 {@link javafx.scene.web.WebView} 的属性，供子类重写以进行额外操作。
+     * * 这个方法本身就在javafx的UI线程，在其中无需使用Platform.runLater无需使用
      *
-     * @param webView 要设置属性的 {@link javafx.scene.web.WebView}
+     * @param context 要设置属性的 {@link AccessWebPage.ContextWrapper}
      */
     protected void doWithWebView(ContextWrapper context) {
 
@@ -271,29 +274,13 @@ public class AccessWebPage {
         engine.executeScript(scriptContent);
     }
 
-    protected static class ContextWrapper{
-        private final WebView  webView;
-        private final Stage stage;
-
-        public ContextWrapper(WebView webView, Stage stage) {
-            this.webView = webView;
-            this.stage = stage;
-        }
-
-        public WebView getWebView() {
-            return webView;
-        }
-
-        public Stage getStage() {
-            return stage;
-        }
+    protected record ContextWrapper(WebView webView, Stage stage) {
     }
 
     /**
      * 用于包装 {@link java.util.concurrent.CompletableFuture} 对象，方便同时获取多个{@link java.util.concurrent.CompletableFuture}的结果。
      */
-    protected interface FutureWrapper {
-
+    public interface FutureWrapper {
     }
 
     /**
