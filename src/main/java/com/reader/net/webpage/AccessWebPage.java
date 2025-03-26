@@ -11,6 +11,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -156,7 +157,7 @@ public class AccessWebPage {
 
         engine.load(inputUrl);
         webpageStage.setScene(new Scene(root));
-        webpageStage.setOnCloseRequest(_ -> onCloseStage());
+        webpageStage.setOnCloseRequest(event -> onCloseStage(event,contextWrapper));
         webpageStage.show();
         isStart = true;
     }
@@ -209,10 +210,12 @@ public class AccessWebPage {
 
     /**
      * 在 {@link javafx.stage.Stage} 关闭时执行的方法，供子类重写以进行额外操作。
+     * 子类应该重写这个方法，并调用父类的 onCloseStage 方法，以确保关闭 {@link javafx.stage.Stage} 时执行额外的操作。
+     * 因为setOnCloseRequest多次设置会覆盖之前的设置，所以子类应该在自己的 onCloseStage 方法中调用父类的 onCloseStage 方法。
      *
      * @see #createStage()
      */
-    protected void onCloseStage() {
+    protected void onCloseStage(WindowEvent event, ContextWrapper context) {
     }
 
     /**
