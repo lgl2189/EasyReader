@@ -89,9 +89,8 @@ public class AccessWebPageWithMenu extends AccessWebPage {
     }
 
     protected static class JavaBridge implements AccessWebPage.JavaBridge {
-        public void showMenu(String elementType) {
-            // 可根据elementType（如"a", "img"）动态调整菜单
-            System.out.println("右键点击元素类型: " + elementType);
+        public void doOnContextMenu(String elementType) {
+
         }
     }
 }

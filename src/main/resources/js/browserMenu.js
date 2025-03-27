@@ -2,7 +2,7 @@
     const handleContextMenu = function (e) {
         e.preventDefault();
         const elementType = e.target.tagName.toLowerCase();
-        window.javaBridge.showMenu(elementType);
+        window.javaBridge.doOnContextMenu(elementType);
     }
     const capture = {
         capture: true
