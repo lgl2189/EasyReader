@@ -48,7 +48,7 @@ public class AccessLoginPermission extends AccessWebPage {
         super.doWithWebView(context);
         WebEngine webEngine = context.webView().getEngine();
         // 设置Chrome的User-Agent（示例为Windows版Chrome 120）
-        String chromeUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+        String chromeUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36";
         webEngine.setUserAgent(chromeUserAgent);
     }
 

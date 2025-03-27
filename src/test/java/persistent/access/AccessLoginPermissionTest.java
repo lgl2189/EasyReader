@@ -34,7 +34,7 @@ public class AccessLoginPermissionTest extends Application {
         Task<AccessLoginPermission.FutureWrapper> task = new Task<>() {
             @Override
             protected AccessLoginPermission.FutureWrapper call() {
-                AccessLoginPermission accessLoginPermission = new AccessLoginPermission("https://masiro.me/");
+                AccessLoginPermission accessLoginPermission = new AccessLoginPermission("https://bilibili.com/");
                 return accessLoginPermission.start();
             }
         };
