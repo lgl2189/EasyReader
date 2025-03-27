@@ -141,9 +141,7 @@ public class AddWebsiteView {
             String url = urlDisplayTextField.getText().trim();
             getXpathRuleAsync(url, xpath -> Platform.runLater(() -> xpathDisplayField.setText(xpath)));
         });
-        saveBtn.setOnAction(_ -> {
-            handleUpdateWebsite();
-        });
+        saveBtn.setOnAction(_ -> handleUpdateWebsite());
         // 新增的删除按钮事件
         deleteBtn.setOnAction(_ -> handleDeleteWebsite());
         deleteBtn.setFocusTraversable(false);
@@ -154,10 +152,11 @@ public class AddWebsiteView {
                 IdGenerator.generateUrlId(urlInputField.getText().trim()),
                 urlInputField.getText().trim(),
                 nameInputField.getText().trim(),
-                xpathInputField.getText().trim()
+                null
+                //xxx
         );
-        if (newWebsite.getName().isEmpty() || newWebsite.getUrl().isEmpty() || newWebsite.getXpath().isEmpty()) {
-            NotificationUtil.showError("网站名称、网址和XPath不能为空！", NotificationUtil.NotificationPosition.TopRight);
+        if (newWebsite.getName().isEmpty() || newWebsite.getUrl().isEmpty()) {
+            NotificationUtil.showError("网站名称和网址不能为空！", NotificationUtil.NotificationPosition.TopRight);
             return;
         }
         websiteList.add(newWebsite);
@@ -193,7 +192,7 @@ public class AddWebsiteView {
                 .filter(website -> website.getId().equals(targetId))
                 .forEach(website -> {
                     website.setName(newName);
-                    website.setXpath(newXpath);
+                    //xxx
                     website.setUrl(newUrl);
                 });
         NotificationUtil.showSuccess("已保存修改！");
@@ -226,7 +225,8 @@ public class AddWebsiteView {
     private void showDetailPanel(Website website) {
         nameDisplayTextField.setText(website.getName());
         urlDisplayTextField.setText(website.getUrl());
-        xpathDisplayField.setText(website.getXpath());
+//        xpathDisplayField.setText(website.getXpath());
+        //xxx
     }
 
     private void getXpathRuleAsync(String url, Consumer<String> onSuccess) {

@@ -1,10 +1,14 @@
 package persistent.access;
 
+import com.reader.entity.net.CookieStorage;
 import com.reader.net.webpage.AccessLoginPermission;
+import com.reader.util.CookieUtil;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -18,19 +22,20 @@ public class AccessLoginPermissionTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        getAsync("https://www.baidu.com", futureWrapper -> {
-            System.out.println(futureWrapper.getLocalStorage());
-            System.out.println(futureWrapper.getCookie());
+        getAsync(futureWrapper -> {
+            List<CookieStorage> cookieStorageList = CookieUtil.parseCookies(futureWrapper.getCookie());
+            Map<String, Object> localStorageMap = CookieUtil.parseLocalStorage(futureWrapper.getLocalStorage());
+            System.out.println("cookie:\n" + cookieStorageList);
+            System.out.println("localStorage:\n" + localStorageMap);
         });
     }
 
-    private void getAsync(String url, Consumer<AccessLoginPermission.FutureWrapper> onSuccess) {
+    private void getAsync(Consumer<AccessLoginPermission.FutureWrapper> onSuccess) {
         Task<AccessLoginPermission.FutureWrapper> task = new Task<>() {
             @Override
             protected AccessLoginPermission.FutureWrapper call() {
-                AccessLoginPermission accessLoginPermission = new AccessLoginPermission("https://www.bilibili.com/");
-                AccessLoginPermission.FutureWrapper futureWrapper = accessLoginPermission.start();
-                return futureWrapper;
+                AccessLoginPermission accessLoginPermission = new AccessLoginPermission("https://masiro.me/");
+                return accessLoginPermission.start();
             }
         };
         task.setOnSucceeded(_ -> onSuccess.accept(task.getValue()));

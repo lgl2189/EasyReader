@@ -1,12 +1,14 @@
 package com.reader.net.webpage;
 
-import javafx.application.Platform;
-import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -14,9 +16,10 @@ import java.util.concurrent.ExecutionException;
  * @author ：李冠良
  * @description ：继承自 AccessWebPageContent 类，实现登录权限的访问，手动登录后，获取登录后的 cookie 和 localStorage 信息。
  */
-public class AccessLoginPermission extends AccessWebPageWithMenu {
+public class AccessLoginPermission extends AccessWebPage {
 
     private final CompletableFuture<FutureWrapper> futureWrapper = new CompletableFuture<>();
+    private final CookieManager cookieManager = new CookieManager();
 
     /**
      * 构造函数，初始化输入的 URL 并进行必要的初始化操作。
@@ -26,6 +29,8 @@ public class AccessLoginPermission extends AccessWebPageWithMenu {
      */
     public AccessLoginPermission(String inputUrl) {
         super(inputUrl);
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        CookieHandler.setDefault(cookieManager);
     }
 
     public FutureWrapper start() {
@@ -60,9 +65,9 @@ public class AccessLoginPermission extends AccessWebPageWithMenu {
         WebView webView = context.webView();
         Stage stage = context.stage();
         try {
-            String cookie = (String) webView.getEngine().executeScript("document.cookie");
+            CookieStore cookieStore = cookieManager.getCookieStore();
             String localStorage = (String) webView.getEngine().executeScript("JSON.stringify(window.localStorage)");
-            futureWrapper.complete(new FutureWrapper(cookie, localStorage));
+            futureWrapper.complete(new FutureWrapper(cookieStore, localStorage));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -74,15 +79,15 @@ public class AccessLoginPermission extends AccessWebPageWithMenu {
     }
 
     public static class FutureWrapper implements AccessWebPage.FutureWrapper {
-        private final String cookie;
+        private final CookieStore cookie;
         private final String localStorage;
 
-        public FutureWrapper(String cookie, String localStorage) {
+        public FutureWrapper(CookieStore cookie, String localStorage) {
             this.cookie = cookie;
             this.localStorage = localStorage;
         }
 
-        public String getCookie() {
+        public CookieStore getCookie() {
             return cookie;
         }
 

@@ -1,6 +1,8 @@
 // Website.java
 package com.reader.entity.storage;
 
+import com.reader.entity.net.LoginStatus;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -11,16 +13,16 @@ public class Website implements Serializable {
     private String id;
     private String url;
     private String name;
-    private String xpath;
+    private LoginStatus loginStatus;
 
     public Website() {
     }
 
-    public Website(String id, String url, String name, String xpath) {
+    public Website(String id, String url, String name, LoginStatus loginStatus) {
         this.id = id;
         this.url = url;
         this.name = name;
-        this.xpath = xpath;
+        this.loginStatus = loginStatus;
     }
 
     public String getId() {
@@ -47,12 +49,12 @@ public class Website implements Serializable {
         this.name = name;
     }
 
-    public String getXpath() {
-        return xpath;
+    public LoginStatus getLoginStatus() {
+        return loginStatus;
     }
 
-    public void setXpath(String xpath) {
-        this.xpath = xpath;
+    public void setLoginStatus(LoginStatus loginStatus) {
+        this.loginStatus = loginStatus;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class Website implements Serializable {
                 "id='" + id + '\'' +
                 ", url='" + url + '\'' +
                 ", name='" + name + '\'' +
-                ", xpath='" + xpath + '\'' +
+                ", loginStatus=" + loginStatus +
                 '}';
     }
 }
