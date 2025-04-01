@@ -57,6 +57,7 @@ public class ObjectDepository extends CommonDepository<Object> {
      * @param key 数据的键
      * @param value 数据的值
      * @param isOverwrite 是否覆盖已存在的数据
+     * @throws IllegalArgumentException 如果key已存在且isOverwrite为false
      */
     @Override
     public void add(String key, Object value, boolean isOverwrite) {
