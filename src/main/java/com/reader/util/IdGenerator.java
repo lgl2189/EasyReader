@@ -24,7 +24,7 @@ public class IdGenerator {
 
     // 提取域名并移除协议和路径（如 "https://www.example.com/path" → "example.com"）
     private static String extractDomain(String url) {
-        String cleaned = url.replaceAll("^(https?://)?(www\\.)?", "") // 移除协议和www
+        String cleaned = url.replaceAll("^(https?://)?", "") // 移除协议和www
                 .split("/")[0]                             // 取域名部分
                 .replaceAll("[^a-zA-Z0-9.-]", "");         // 移除非合法字符
         return cleaned.isEmpty() ? "invalid_domain" : cleaned;
