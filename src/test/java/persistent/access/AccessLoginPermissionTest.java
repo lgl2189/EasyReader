@@ -1,8 +1,8 @@
 package persistent.access;
 
 import com.reader.entity.net.CookieStorage;
+import com.reader.entity.net.LoginStatus;
 import com.reader.net.webpage.AccessLoginPermission;
-import com.reader.util.CookieUtil;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
@@ -22,18 +22,18 @@ public class AccessLoginPermissionTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        getAsync(futureWrapper -> {
-            List<CookieStorage> cookieStorageList = CookieUtil.parseCookies(futureWrapper.getCookie());
-            Map<String, Object> localStorageMap = CookieUtil.parseLocalStorage(futureWrapper.getLocalStorage());
+        getAsync(loginStatus -> {
+            List<CookieStorage> cookieStorageList = loginStatus.getCookieStorageList();
+            Map<String, Object> localStorageMap = loginStatus.getLocalStorageMap();
             System.out.println("cookie:\n" + cookieStorageList);
             System.out.println("localStorage:\n" + localStorageMap);
         });
     }
 
-    private void getAsync(Consumer<AccessLoginPermission.FutureWrapper> onSuccess) {
-        Task<AccessLoginPermission.FutureWrapper> task = new Task<>() {
+    private void getAsync(Consumer<LoginStatus> onSuccess) {
+        Task<LoginStatus> task = new Task<>() {
             @Override
-            protected AccessLoginPermission.FutureWrapper call() {
+            protected LoginStatus call() {
                 AccessLoginPermission accessLoginPermission = new AccessLoginPermission("https://bilibili.com/");
                 return accessLoginPermission.start();
             }

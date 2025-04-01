@@ -17,9 +17,9 @@ public class LoginStatus implements Serializable {
     private static final long serialVersionUID = 4452425838135552712L;
 
     private List<CookieStorage> cookieStorageList;
-    private Map<String, String> localStorageMap;
+    private Map<String, Object> localStorageMap;
 
-    public LoginStatus(List<CookieStorage> cookieStorageList, Map<String, String> localStorageMap) {
+    public LoginStatus(List<CookieStorage> cookieStorageList, Map<String, Object> localStorageMap) {
         this.cookieStorageList = cookieStorageList;
         this.localStorageMap = localStorageMap;
     }
@@ -32,11 +32,11 @@ public class LoginStatus implements Serializable {
         this.cookieStorageList = cookieStorageList;
     }
 
-    public Map<String, String> getLocalStorageMap() {
+    public Map<String, Object> getLocalStorageMap() {
         return localStorageMap;
     }
 
-    public void setLocalStorageMap(Map<String, String> localStorageMap) {
+    public void setLocalStorageMap(Map<String, Object> localStorageMap) {
         this.localStorageMap = localStorageMap;
     }
 

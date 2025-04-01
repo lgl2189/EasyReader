@@ -21,19 +21,9 @@
             <Label text="网站名称:" GridPane.rowIndex="1"/>
             <TextField fx:id="nameInputField" promptText="输入网站名称" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <Label text="XPath规则:" GridPane.rowIndex="2"/>
-            <TextField promptText="输入XPath规则" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                       fx:id="xpathInputField"/>
-
-            <Button fx:id="getXpathBtnOnAdd" prefWidth="80" text="获取规则" GridPane.rowIndex="3">
-                <tooltip>
-                    <Tooltip text="使用可视化窗口获取当前网站的XPath解析规则"/>
-                </tooltip>
-            </Button>
-
             <Button fx:id="confirmAddBtn" prefWidth="80" text="添加网站" GridPane.rowIndex="4">
                 <tooltip>
-                    <Tooltip text="点击保存新的网站配置"/>
+                    <Tooltip text="点击添加新的网站配置"/>
                 </tooltip>
             </Button>
 
@@ -51,28 +41,23 @@
 
         <!-- 详情面板 -->
         <VBox fx:id="detailPanel" spacing="15" style="-fx-padding: 20px;" visible="false">
-
-
             <VBox spacing="10">
                 <Label style="-fx-font-weight: bold;" text="网站名称："/>
                 <TextField fx:id="nameDisplayTextField" editable="false"/>
 
                 <Label style="-fx-font-weight: bold;" text="网站URL："/>
                 <TextField style="-fx-min-width: 300px;" fx:id="urlDisplayTextField" editable="false"/>
-
-                <Label style="-fx-font-weight: bold;" text="XPath规则："/>
-                <TextField style="-fx-min-width: 300px;" fx:id="xpathDisplayField" editable="false"/>
             </VBox>
 
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Button fx:id="changeBtn" text="修改">
                     <tooltip>
-                        <Tooltip text="修改当前选中的网站信息"/>
+                        <Tooltip text="修改当前选中的网站信息，需要点击保存按钮修改才会被保存"/>
                     </tooltip>
                 </Button>
-                <Button fx:id="getXpathOnDetail" text="获取规则" visible="false">
+                <Button fx:id="getLoginStatusOnDetail" prefWidth="100" text="获取登录信息" visible="false">
                     <tooltip>
-                        <Tooltip text="使用可视化窗口获取当前网站的XPath解析规则"/>
+                        <Tooltip text="使用可视化窗口获取当前网站的登录状态信息，点击保存后才会显示新的登录信息"/>
                     </tooltip>
                 </Button>
                 <Button fx:id="saveBtn" text="保存" visible="false">
@@ -88,6 +73,15 @@
                     </tooltip>
                 </Button>
             </HBox>
+
+            <!-- 新增的登录状态显示区域 -->
+            <VBox spacing="10" style="-fx-padding: 10px; -fx-border-color: #ccc; -fx-border-width: 1px; -fx-border-radius: 5px;">
+                <Label style="-fx-font-weight: bold;" text="登录状态信息"/>
+                <Label text="Cookies:"/>
+                <ListView fx:id="cookieListView" style="-fx-max-height: 100px; -fx-pref-height: 100px;"/>
+                <Label text="LocalStorage:"/>
+                <ListView fx:id="localStorageListView" style="-fx-max-height: 100px; -fx-pref-height: 100px;"/>
+            </VBox>
         </VBox>
     </StackPane>
 </SplitPane>

@@ -1,5 +1,7 @@
 package com.reader.net.webpage;
 
+import com.reader.entity.net.LoginStatus;
+import com.reader.util.CookieUtil;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -18,7 +20,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class AccessLoginPermission extends AccessWebPage {
 
-    private final CompletableFuture<FutureWrapper> futureWrapper = new CompletableFuture<>();
+    private final CompletableFuture<LoginStatus> loginStatusFuture = new CompletableFuture<>();
     private final CookieManager cookieManager = new CookieManager();
 
     /**
@@ -33,10 +35,10 @@ public class AccessLoginPermission extends AccessWebPage {
         CookieHandler.setDefault(cookieManager);
     }
 
-    public FutureWrapper start() {
+    public LoginStatus start() {
         run();
         try {
-            return futureWrapper.get();
+            return loginStatusFuture.get();
         }
         catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -53,13 +55,6 @@ public class AccessLoginPermission extends AccessWebPage {
     }
 
     @Override
-    protected void doWithStage(ContextWrapper context) {
-        super.doWithStage(context);
-        WebView webView = context.webView();
-        Stage stage = context.stage();
-    }
-
-    @Override
     protected void onCloseStage(WindowEvent event, ContextWrapper context) {
         super.onCloseStage(event, context);
         WebView webView = context.webView();
@@ -67,32 +62,17 @@ public class AccessLoginPermission extends AccessWebPage {
         try {
             CookieStore cookieStore = cookieManager.getCookieStore();
             String localStorage = (String) webView.getEngine().executeScript("JSON.stringify(window.localStorage)");
-            futureWrapper.complete(new FutureWrapper(cookieStore, localStorage));
+            loginStatusFuture.complete(new LoginStatus(
+                    CookieUtil.parseCookies(cookieStore),
+                    CookieUtil.parseLocalStorage(localStorage)
+            ));
         }
         catch (Exception e) {
             e.printStackTrace();
-            futureWrapper.completeExceptionally(e);
+            loginStatusFuture.completeExceptionally(e);
         }
         finally {
             stage.close();
-        }
-    }
-
-    public static class FutureWrapper implements AccessWebPage.FutureWrapper {
-        private final CookieStore cookie;
-        private final String localStorage;
-
-        public FutureWrapper(CookieStore cookie, String localStorage) {
-            this.cookie = cookie;
-            this.localStorage = localStorage;
-        }
-
-        public CookieStore getCookie() {
-            return cookie;
-        }
-
-        public String getLocalStorage() {
-            return localStorage;
         }
     }
 }

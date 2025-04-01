@@ -1,12 +1,12 @@
 package com.reader.ui.view;
 
+import com.reader.entity.net.LoginStatus;
 import com.reader.entity.storage.Website;
-import com.reader.net.webpage.AccessXpath;
+import com.reader.net.webpage.AccessLoginPermission;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
 import com.reader.ui.util.NotificationUtil;
 import com.reader.util.IdGenerator;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -36,11 +36,7 @@ public class AddWebsiteView {
     @FXML
     private TextField nameInputField;
     @FXML
-    private TextField xpathInputField;
-    @FXML
     private Button confirmAddBtn;
-    @FXML
-    private Button getXpathBtnOnAdd;
 
     // 详情面板组件
     @FXML
@@ -50,15 +46,18 @@ public class AddWebsiteView {
     @FXML
     private TextField urlDisplayTextField;
     @FXML
-    private TextField xpathDisplayField;
-    @FXML
     private Button changeBtn;
     @FXML
-    private Button getXpathOnDetail;
+    private Button getLoginStatusOnDetail;
     @FXML
     private Button saveBtn;
     @FXML
     private Button deleteBtn;
+    // 新增的登录状态显示组件
+    @FXML
+    private ListView<String> cookieListView;
+    @FXML
+    private ListView<String> localStorageListView;
 
     private final ObservableList<Website> websiteList = FXCollections.observableArrayList();
     private final ObjectDepository websiteDepository = DataStorage.WEBSITE_DEPOSITORY;
@@ -99,11 +98,6 @@ public class AddWebsiteView {
             websiteListView.getSelectionModel().clearSelection();
             clearInputFields();
         });
-        // 获取XPath按钮
-        getXpathBtnOnAdd.setOnAction(_ -> {
-            String url = urlInputField.getText().trim();
-            getXpathRuleAsync(url, xpath -> Platform.runLater(() -> xpathInputField.setText(xpath)));
-        });
         // 确认添加按钮
         confirmAddBtn.setOnAction(_ -> handleAddWebsite());
         // 列表选择监听
@@ -119,27 +113,26 @@ public class AddWebsiteView {
         });
         //点击修改按钮
         changeBtn.setOnAction(_ -> {
-            if (getXpathOnDetail.isVisible()) {
-                getXpathOnDetail.setVisible(false);
+            if (getLoginStatusOnDetail.isVisible()) {
+                getLoginStatusOnDetail.setVisible(false);
                 saveBtn.setVisible(false);
                 nameDisplayTextField.setEditable(false);
                 urlDisplayTextField.setEditable(false);
-                xpathDisplayField.setEditable(false);
                 changeBtn.setText("修改");
             }
             else {
-                getXpathOnDetail.setVisible(true);
+                getLoginStatusOnDetail.setVisible(true);
                 saveBtn.setVisible(true);
                 nameDisplayTextField.setEditable(true);
                 urlDisplayTextField.setEditable(true);
-                xpathDisplayField.setEditable(true);
                 changeBtn.setText("退出修改");
             }
         });
         // 更新XPath按钮
-        getXpathOnDetail.setOnAction(_ -> {
+        getLoginStatusOnDetail.setOnAction(_ -> {
             String url = urlDisplayTextField.getText().trim();
-            getXpathRuleAsync(url, xpath -> Platform.runLater(() -> xpathDisplayField.setText(xpath)));
+            getXpathRuleAsync(url, loginStatus -> websiteListView.getSelectionModel().getSelectedItem().setLoginStatus(loginStatus));
+            updateLoginStatusDisplay(websiteListView.getSelectionModel().getSelectedItem().getLoginStatus());
         });
         saveBtn.setOnAction(_ -> handleUpdateWebsite());
         // 新增的删除按钮事件
@@ -153,7 +146,6 @@ public class AddWebsiteView {
                 urlInputField.getText().trim(),
                 nameInputField.getText().trim(),
                 null
-                //xxx
         );
         if (newWebsite.getName().isEmpty() || newWebsite.getUrl().isEmpty()) {
             NotificationUtil.showError("网站名称和网址不能为空！", NotificationUtil.NotificationPosition.TopRight);
@@ -181,22 +173,19 @@ public class AddWebsiteView {
             NotificationUtil.showError("网址不能为空！");
             return;
         }
-        String newXpath = xpathDisplayField.getText().trim();
-        if (newXpath.isEmpty()) {
-            NotificationUtil.showError("XPath不能为空！");
-            return;
-        }
+        LoginStatus loginStatus = selectedWebsite.getLoginStatus();
         // 更新所有同id的XPath
         String targetId = selectedWebsite.getId();
         websiteList.stream()
                 .filter(website -> website.getId().equals(targetId))
                 .forEach(website -> {
                     website.setName(newName);
-                    //xxx
                     website.setUrl(newUrl);
+                    website.setLoginStatus(loginStatus);
                 });
-        NotificationUtil.showSuccess("已保存修改！");
+        updateLoginStatusDisplay(loginStatus);
         websiteDepository.update(targetId, selectedWebsite);
+        NotificationUtil.showSuccess("已保存修改！");
     }
 
     private void handleDeleteWebsite() {
@@ -212,30 +201,51 @@ public class AddWebsiteView {
         // 重置UI状态
         detailPanel.setVisible(false);
         websiteListView.getSelectionModel().clearSelection();
-
         NotificationUtil.showSuccess("已成功删除网站配置！");
     }
 
     private void clearInputFields() {
         urlInputField.clear();
         nameInputField.clear();
-        xpathInputField.clear();
     }
 
     private void showDetailPanel(Website website) {
         nameDisplayTextField.setText(website.getName());
         urlDisplayTextField.setText(website.getUrl());
-//        xpathDisplayField.setText(website.getXpath());
-        //xxx
+        // 更新登录状态显示
+        updateLoginStatusDisplay(website.getLoginStatus());
     }
 
-    private void getXpathRuleAsync(String url, Consumer<String> onSuccess) {
-        Task<String> task = new Task<>() {
+    private void updateLoginStatusDisplay(LoginStatus loginStatus) {
+        ObservableList<String> cookieItems = FXCollections.observableArrayList();
+        ObservableList<String> localStorageItems = FXCollections.observableArrayList();
+
+        if (loginStatus != null) {
+            // 添加cookie信息
+            if (loginStatus.getCookieStorageList() != null) {
+                loginStatus.getCookieStorageList().forEach(cookie ->
+                        cookieItems.add(cookie.toString())
+                );
+            }
+
+            // 添加localStorage信息
+            if (loginStatus.getLocalStorageMap() != null) {
+                loginStatus.getLocalStorageMap().forEach((key, value) ->
+                        localStorageItems.add(key + " = " + value)
+                );
+            }
+        }
+
+        cookieListView.setItems(cookieItems);
+        localStorageListView.setItems(localStorageItems);
+    }
+
+    private void getXpathRuleAsync(String url, Consumer<LoginStatus> onSuccess) {
+        Task<LoginStatus> task = new Task<>() {
             @Override
-            protected String call() {
-                AccessXpath accessXpath = new AccessXpath(url);
-                accessXpath.execute();
-                return accessXpath.getXpath();
+            protected LoginStatus call() {
+                AccessLoginPermission accessLoginPermission = new AccessLoginPermission(url);
+                return accessLoginPermission.start();
             }
         };
         task.setOnSucceeded(_ -> onSuccess.accept(task.getValue()));
