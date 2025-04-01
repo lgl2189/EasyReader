@@ -10,11 +10,14 @@ import java.io.Serializable;
  */
 
 
-public class Book implements Serializable {
+public class BookTemplate implements Serializable {
     @Serial
     private static final long serialVersionUID = 8953341596805301998L;
 
     private final String id;
+    /**
+     * 保存这个图书模板所属的网站，
+     */
     private Website website;
     private String bookNameXpath;
     private String authorXpath = null;
@@ -24,16 +27,16 @@ public class Book implements Serializable {
     private String descriptionXpath = null;    // 图书是否已完结
     private Boolean isFinishedXpath = null;
     /**
-     * 这本书有多少层目录，默认为1层，即所有章（书籍层次的最小单位）都在同一层（不存在更小的层级），不存在卷、篇等子层级。
+     * 这个图书模板有多少层目录，默认为1层，即所有章（书籍层次的最小单位）都在同一层（不存在更小的层级），不存在卷、篇等子层级。
      */
     private int layerCount = 1;
 
-    public Book(String id, String bookNameXpath) {
+    public BookTemplate(String id, String bookNameXpath) {
         this.id = id;
         this.bookNameXpath = bookNameXpath;
     }
 
-    public Book(String id, Website website, String bookNameXpath, String authorXpath, String publisherXpath, String isbnXpath, String languageXpath, String descriptionXpath, Boolean isFinishedXpath, int layerCount) {
+    public BookTemplate(String id, Website website, String bookNameXpath, String authorXpath, String publisherXpath, String isbnXpath, String languageXpath, String descriptionXpath, Boolean isFinishedXpath, int layerCount) {
         this.id = id;
         this.website = website;
         this.bookNameXpath = bookNameXpath;
