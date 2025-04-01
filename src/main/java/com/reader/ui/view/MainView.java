@@ -18,6 +18,7 @@ public class MainView {
     @FXML private StackPane contentArea;
 
     private final Map<String, Node> viewCache = new HashMap<>();
+    private final Map<String, Object> controllerCache = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -61,6 +62,15 @@ public class MainView {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
                 view = loader.load();
                 viewCache.put(fxmlPath, view);
+                controllerCache.put(fxmlPath, loader.getController());
+            }
+            else{
+                if (fxmlPath.equals("/com/reader/ui/view/addBook-view.fxml")) {
+                    Object controller = controllerCache.get(fxmlPath);
+                    if (controller instanceof AddBookView) {
+                        ((AddBookView) controller).refreshData();
+                    }
+                }
             }
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
