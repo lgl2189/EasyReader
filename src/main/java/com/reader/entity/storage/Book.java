@@ -4,9 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author      ：李冠良
+ * @author ：李冠良
  * @description ：用于存储一本书所有需要存储在本地的信息，不仅仅包括一本书本身的信息，还包括获取这本书所需要的规则等额外信息。
- * @date        ：2025 3月 21 19:54
+ * @date ：2025 3月 21 19:54
  */
 
 
@@ -14,8 +14,8 @@ public class Book implements Serializable {
     @Serial
     private static final long serialVersionUID = 8953341596805301998L;
 
-    private String id;
-    private com.reader.entity.book.Book book;
+    private final String id;
+    private Website website;
     private String bookNameXpath;
     private String authorXpath = null;
     private String publisherXpath = null;
@@ -24,19 +24,18 @@ public class Book implements Serializable {
     private String descriptionXpath = null;    // 图书是否已完结
     private Boolean isFinishedXpath = null;
     /**
-     * 这本书有多少层目录，默认为1层，即所有章节都在同一层（不存在更小的层级）
+     * 这本书有多少层目录，默认为1层，即所有章（书籍层次的最小单位）都在同一层（不存在更小的层级），不存在卷、篇等子层级。
      */
     private int layerCount = 1;
 
-    public Book(String id, com.reader.entity.book.Book book, String bookNameXpath) {
+    public Book(String id, String bookNameXpath) {
         this.id = id;
-        this.book = book;
         this.bookNameXpath = bookNameXpath;
     }
 
-    public Book(String id, com.reader.entity.book.Book book, String bookNameXpath, String authorXpath, String publisherXpath, String isbnXpath, String languageXpath, String descriptionXpath, Boolean isFinishedXpath, int layerCount) {
+    public Book(String id, Website website, String bookNameXpath, String authorXpath, String publisherXpath, String isbnXpath, String languageXpath, String descriptionXpath, Boolean isFinishedXpath, int layerCount) {
         this.id = id;
-        this.book = book;
+        this.website = website;
         this.bookNameXpath = bookNameXpath;
         this.authorXpath = authorXpath;
         this.publisherXpath = publisherXpath;
@@ -51,16 +50,12 @@ public class Book implements Serializable {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Website getWebsite() {
+        return website;
     }
 
-    public com.reader.entity.book.Book getBook() {
-        return book;
-    }
-
-    public void setBook(com.reader.entity.book.Book book) {
-        this.book = book;
+    public void setWebsite(Website website) {
+        this.website = website;
     }
 
     public String getBookNameXpath() {
@@ -131,7 +126,7 @@ public class Book implements Serializable {
     public String toString() {
         return "Book{" +
                 "id='" + id + '\'' +
-                ", book=" + book +
+                ", website=" + website +
                 ", bookNameXpath='" + bookNameXpath + '\'' +
                 ", authorXpath='" + authorXpath + '\'' +
                 ", publisherXpath='" + publisherXpath + '\'' +
