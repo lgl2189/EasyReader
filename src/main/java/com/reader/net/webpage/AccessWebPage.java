@@ -157,7 +157,7 @@ public class AccessWebPage {
 
         engine.load(inputUrl);
         webpageStage.setScene(new Scene(root));
-        webpageStage.setOnCloseRequest(event -> onCloseStage(event,contextWrapper));
+        webpageStage.setOnCloseRequest(event -> onCloseStage(event, contextWrapper));
         webpageStage.show();
         isStart = true;
     }
@@ -280,11 +280,6 @@ public class AccessWebPage {
     protected record ContextWrapper(WebView webView, Stage stage) {
     }
 
-    /**
-     * 用于包装 {@link java.util.concurrent.CompletableFuture} 对象，方便同时获取多个{@link java.util.concurrent.CompletableFuture}的结果。
-     */
-    public interface FutureWrapper {
-    }
 
     /**
      * 用于包装 Java 代码和 JavaScript 代码之间的通信接口。
