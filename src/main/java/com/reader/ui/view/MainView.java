@@ -29,7 +29,7 @@ public class MainView {
     private void setupTabs() {
         addTab("首页", "/com/reader/ui/view/home-view.fxml");
         addTab("添加网站", "/com/reader/ui/view/addWebsite-view.fxml");
-        addTab("添加书籍", "/com/reader/ui/view/addBook-view.fxml");
+        addTab("添加书籍模板", "/com/reader/ui/view/addBook-view.fxml");
         addTab("下载书籍", "/com/reader/ui/view/downloadBook-view.fxml");
     }
 
