@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 
-public class AccessWebPageWithMenu extends AccessWebPage {
+public abstract class AccessWebPageWithMenu extends AccessWebPage {
 
     private static final String menuScript;
     private final List<MenuItem> menuItemList = new ArrayList<>();
@@ -41,6 +41,8 @@ public class AccessWebPageWithMenu extends AccessWebPage {
         super(inputUrl);
     }
 
+    protected abstract JavaBridge setJavaBridgeObject();
+
     @Override
     protected void doWithWebView(ContextWrapper context) {
         super.doWithWebView(context);
@@ -55,7 +57,7 @@ public class AccessWebPageWithMenu extends AccessWebPage {
         });
 
         // 注入JS禁用网页右键
-        JavaBridge javaBridge = new JavaBridge();
+        JavaBridge javaBridge = setJavaBridgeObject();
         webEngine.getLoadWorker().stateProperty().addListener((_, _, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 bindJavaBridge(webEngine, javaBridge);
@@ -88,9 +90,7 @@ public class AccessWebPageWithMenu extends AccessWebPage {
         menuItemList.add(menuItem);
     }
 
-    protected static class JavaBridge implements AccessWebPage.JavaBridge {
-        public void doOnContextMenu(String elementType) {
-
-        }
+    protected interface JavaBridge extends AccessWebPage.JavaBridge {
+        void doOnContextMenu(String elementType);
     }
 }
