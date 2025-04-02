@@ -16,7 +16,7 @@ public class BookTemplate implements Serializable {
 
     private final String id;
     /**
-     * 保存这个图书模板所属的网站，
+     * 保存这个图书模板所属的网站的信息
      */
     private Website website;
     private String bookNameXpath;
