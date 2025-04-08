@@ -156,12 +156,12 @@
                     menuItemId,
                     JSON.stringify({
                         xpath: xpath,
-                        tagName: element.tagName.toLowerCase(),
-                        id: element.id || '',
-                        className: element.className || '',
+                        // tagName: element.tagName.toLowerCase(),
+                        // id: element.id || '',
+                        // className: element.className || '',
                         text: element.textContent.trim().slice(0, 50) + (element.textContent.trim().length > 50 ? '...' : ''),
-                        screenX: parseInt(menu.style.left),
-                        screenY: parseInt(menu.style.top)
+                        // screenX: parseInt(menu.style.left),
+                        // screenY: parseInt(menu.style.top)
                     })
                 );
             } else {

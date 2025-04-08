@@ -54,19 +54,6 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
         WebEngine webEngine = webView.getEngine();
         webView.setContextMenuEnabled(true);
 
-        // 设置 alert 处理器
-        webEngine.setOnAlert(event -> {
-            // 获取 alert 的内容
-            String message = event.getData();
-            System.out.println(message);
-            // 可以用 JavaFX Alert 显示
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("JavaScript Alert");
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        });
-
         JavaBridge javaBridge = setJavaBridgeObject();
         webEngine.getLoadWorker().stateProperty().addListener((_, _, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
@@ -117,7 +104,17 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
     }
 
     protected class JavaBridge implements AccessWebPage.JavaBridge {
+        /**
+         * 菜单项点击事件处理函数，该处理函数默认实现会直接调用菜单项的 action 事件处理函数，并在 UI 线程中执行
+         * 如果不需要立刻执行 action 事件处理函数，可以重写该函数，在其中执行必要的操作，然后调用 handleAction 方法来执行 action 事件处理函数
+         * @param menuItemId 菜单项 ID
+         * @param elementInfoJson 选择的元素信息的 JSON 字符串
+         */
         public void onMenuItemClicked(String menuItemId, String elementInfoJson) {
+            handleAction(menuItemId);
+        }
+
+        protected void handleAction(String menuItemId) {
             menuItemList.stream()
                     .filter(item -> item.id().equals(menuItemId))
                     .findFirst()
@@ -125,8 +122,6 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
                         Platform.runLater(() -> {
                             item.action().handle(new ActionEvent());
                         });
-                        // 可解析 elementInfoJson 获取元素信息
-                        System.out.println("菜单点击: " + menuItemId + ", 元素: " + elementInfoJson);
                     });
         }
     }
