@@ -6,6 +6,7 @@ import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -145,6 +146,7 @@ public class AccessWebPage {
         // 组合布局
         VBox root = new VBox(buttonBar, webView);
         root.setPrefSize(800, 600);
+        VBox.setVgrow(webView, Priority.ALWAYS);
 
         engine.getLoadWorker().stateProperty().addListener((_, _, newState) -> {
             if (newState == Worker.State.SUCCEEDED && scriptContent != null && !scriptContent.isEmpty()) {
