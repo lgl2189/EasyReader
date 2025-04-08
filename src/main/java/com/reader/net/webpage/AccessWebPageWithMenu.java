@@ -89,12 +89,31 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
         });
     }
 
+    /**
+     * 为浏览器自定义右键菜单添加菜单项
+     * @param title 菜单项标题
+     * @param action 菜单项点击事件，菜单项被点击时会触发该事件
+     */
     public void addMenuItem(String title, javafx.event.EventHandler<ActionEvent> action) {
         if (isStart) {
             throw new IllegalCallerException("请在调用run()之前添加菜单项！");
         }
         MenuItem menuItem = new MenuItem(IdGenerator.generateIdFromString(title), title, action);
         menuItemList.add(menuItem);
+    }
+
+    /**
+     * 为浏览器自定义右键菜单添加菜单项，该菜单项仅用于UI操作，action将在UI线程中执行
+     * @param title 菜单项标题
+     * @param action 菜单项点击事件，菜单项被点击时会触发该事件
+     */
+    public void addMenuItemForUiOperator(String title, javafx.event.EventHandler<ActionEvent> action) {
+        javafx.event.EventHandler<ActionEvent> uiAction = event -> {
+            Platform.runLater(()->{
+                action.handle(event);
+            });
+        };
+        addMenuItem(title, uiAction);
     }
 
     protected class JavaBridge implements AccessWebPage.JavaBridge {
