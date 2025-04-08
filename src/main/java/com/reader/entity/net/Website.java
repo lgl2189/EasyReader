@@ -1,7 +1,5 @@
 // Website.java
-package com.reader.entity.storage;
-
-import com.reader.entity.net.LoginStatus;
+package com.reader.entity.net;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -1,6 +1,6 @@
-package com.reader.entity.storage.template;
+package com.reader.entity.template;
 
-import com.reader.entity.storage.Website;
+import com.reader.entity.net.Website;
 
 import java.io.Serial;
 import java.io.Serializable;
