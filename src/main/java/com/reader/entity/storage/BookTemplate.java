@@ -14,7 +14,7 @@ public class BookTemplate implements Serializable {
     @Serial
     private static final long serialVersionUID = 8953341596805301998L;
 
-    private final String id;
+    private String id;
     /**
      * 保存这个图书模板所属的网站的信息
      */
@@ -25,18 +25,21 @@ public class BookTemplate implements Serializable {
     private String isbnXpath = null;
     private String languageXpath = null;
     private String descriptionXpath = null;    // 图书是否已完结
-    private Boolean isFinishedXpath = null;
+    private String isFinishedXpath = null;
     /**
      * 这个图书模板有多少层目录，默认为1层，即所有章（书籍层次的最小单位）都在同一层（不存在更小的层级），不存在卷、篇等子层级。
      */
     private int layerCount = 1;
+
+    public BookTemplate() {
+    }
 
     public BookTemplate(String id, String bookNameXpath) {
         this.id = id;
         this.bookNameXpath = bookNameXpath;
     }
 
-    public BookTemplate(String id, Website website, String bookNameXpath, String authorXpath, String publisherXpath, String isbnXpath, String languageXpath, String descriptionXpath, Boolean isFinishedXpath, int layerCount) {
+    public BookTemplate(String id, Website website, String bookNameXpath, String authorXpath, String publisherXpath, String isbnXpath, String languageXpath, String descriptionXpath, String isFinishedXpath, int layerCount) {
         this.id = id;
         this.website = website;
         this.bookNameXpath = bookNameXpath;
@@ -51,6 +54,10 @@ public class BookTemplate implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Website getWebsite() {
@@ -109,12 +116,12 @@ public class BookTemplate implements Serializable {
         this.descriptionXpath = descriptionXpath;
     }
 
-    public Boolean getFinishedXpath() {
+    public String getIsFinishedXpath() {
         return isFinishedXpath;
     }
 
-    public void setFinishedXpath(Boolean finishedXpath) {
-        isFinishedXpath = finishedXpath;
+    public void setIsFinishedXpath(String isFinishedXpath) {
+        this.isFinishedXpath = isFinishedXpath;
     }
 
     public int getLayerCount() {
