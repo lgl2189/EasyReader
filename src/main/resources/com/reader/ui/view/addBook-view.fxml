@@ -8,40 +8,134 @@
 
     <!-- 左侧区域 -->
     <VBox spacing="10" style="-fx-padding: 15px;">
-        <Button fx:id="addBookBtn" text="添加新书" />
-        <ListView fx:id="bookListView" VBox.vgrow="ALWAYS" />
+        <Button fx:id="addBookTemplateBtn" text="添加模板"/>
+        <ListView fx:id="bookListView" VBox.vgrow="ALWAYS"/>
     </VBox>
 
     <!-- 右侧区域 -->
     <StackPane>
         <!-- 添加表单 -->
-        <GridPane fx:id="addFormPane">
-            <Label text="书籍名称:" GridPane.rowIndex="0" />
-            <TextField fx:id="nameInputField" promptText="输入书籍名称" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <GridPane fx:id="addFormPane" style="-fx-padding: 15px;" hgap="10" vgap="10">
+            <Label text="模板名称:" GridPane.rowIndex="0"/>
+            <TextField fx:id="templateNameInputField" promptText="输入图书模板名称" GridPane.columnIndex="1"
+                       GridPane.rowIndex="0"/>
 
-            <Label text="书籍链接:" GridPane.rowIndex="1" />
-            <TextField fx:id="urlInputField" promptText="输入书籍链接" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="所属网站:" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="websiteComboBox" promptText="选择网站" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <Button fx:id="confirmAddBtn" text="添加书籍" GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <Label text="书名XPath:" GridPane.rowIndex="2"/>
+            <TextField fx:id="bookNameXpathField" promptText="输入书名XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="2"/>
+
+            <Label text="作者XPath:" GridPane.rowIndex="3"/>
+            <TextField fx:id="authorXpathField" promptText="输入作者XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="3"/>
+
+            <Label text="出版社XPath:" GridPane.rowIndex="4"/>
+            <TextField fx:id="publisherXpathField" promptText="输入出版社XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="4"/>
+
+            <Label text="ISBN XPath:" GridPane.rowIndex="5"/>
+            <TextField fx:id="isbnXpathField" promptText="输入ISBN XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="5"/>
+
+            <Label text="语言XPath:" GridPane.rowIndex="6"/>
+            <TextField fx:id="languageXpathField" promptText="输入语言XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="6"/>
+
+            <Label text="描述XPath:" GridPane.rowIndex="7"/>
+            <TextField fx:id="descriptionXpathField" promptText="输入描述XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="7"/>
+
+            <Label text="完结状态XPath:" GridPane.rowIndex="8"/>
+            <TextField fx:id="isFinishedXpathField" promptText="输入完结状态XPath" GridPane.columnIndex="1"
+                       GridPane.rowIndex="8"/>
+
+            <Label text="目录层级数:" GridPane.rowIndex="9"/>
+            <Spinner fx:id="layerCountSpinner" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+            <Button text="获取规则" fx:id="getXpathBtnOnAdd" GridPane.columnSpan="1" GridPane.rowIndex="10">
                 <tooltip>
-                    <Tooltip text="点击保存新的书籍配置" />
+                    <Tooltip text="点击获取图书模板的XPath规则"/>
+                </tooltip>
+            </Button>
+
+            <Button fx:id="confirmAddBtn" text="添加模板" GridPane.columnSpan="1" GridPane.rowIndex="11">
+                <tooltip>
+                    <Tooltip text="点击保存新的图书模板配置"/>
                 </tooltip>
             </Button>
 
             <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" />
-                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints halignment="RIGHT" minWidth="100"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
             </rowConstraints>
         </GridPane>
 
-        <!-- 详情面板（留空） -->
-        <VBox fx:id="detailPanel" spacing="15" style="-fx-padding: 20px;" visible="false">
-            <!-- 可在此处添加书籍详情组件 -->
-        </VBox>
+        <!-- 详情面板 -->
+        <ScrollPane fx:id="detailPane" visible="false">
+            <VBox spacing="15" style="-fx-padding: 20px;">
+                <Label text="模板名称:"/>
+                <TextField fx:id="detailTemplateName" editable="false"/>
+                <Label text="所属网站:"/>
+                <TextField fx:id="detailWebsite" editable="false"/>
+                <Label text="书名XPath:"/>
+                <TextField fx:id="detailBookNameXpath" editable="false"/>
+                <Label text="作者XPath:"/>
+                <TextField fx:id="detailAuthorXpath" editable="false"/>
+                <Label text="出版社XPath:"/>
+                <TextField fx:id="detailPublisherXpath" editable="false"/>
+                <Label text="ISBN XPath:"/>
+                <TextField fx:id="detailIsbnXpath" editable="false"/>
+                <Label text="语言XPath:"/>
+                <TextField fx:id="detailLanguageXpath" editable="false"/>
+                <Label text="描述XPath:"/>
+                <TextField fx:id="detailDescriptionXpath" editable="false"/>
+                <Label text="完结状态XPath:"/>
+                <TextField fx:id="detailIsFinishedXpath" editable="false"/>
+                <Label text="目录层级数:"/>
+                <TextField fx:id="detailLayerCount" editable="false"/>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Button fx:id="changeBtn" text="修改">
+                        <tooltip>
+                            <Tooltip text="修改当前选中图书模板板信息，需要点击保存按钮修改才会被保存"/>
+                        </tooltip>
+                    </Button>
+                    <Button fx:id="saveBtn" text="保存" visible="false">
+                        <tooltip>
+                            <Tooltip text="保存修改后的信息"/>
+                        </tooltip>
+                    </Button>
+                    <Button fx:id="getXpathBtnOnDetail" text="获取规则" visible="false">
+                        <tooltip>
+                            <Tooltip text="点击获取该模板的XPath规则"/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <!-- 添加删除按钮 -->
+                    <Button fx:id="deleteBtn" text="删除" style="-fx-text-fill: #ff4444;">
+                        <tooltip>
+                            <Tooltip text="删除当前选中的图书模板信息"/>
+                        </tooltip>
+                    </Button>
+                </HBox>
+            </VBox>
+        </ScrollPane>
     </StackPane>
 </SplitPane>
