@@ -39,7 +39,7 @@ public class XPathGenerator {
 
     private static void loadXPathScript() {
         try {
-            InputStream inputStream = XPathGenerator.class.getResourceAsStream("/js/getXpath.js");
+            InputStream inputStream = XPathGenerator.class.getResourceAsStream("/backup/getXpath.js");
             if (inputStream == null) {
                 throw new RuntimeException("加载脚本失败: /js/getXpath.js");
             }
