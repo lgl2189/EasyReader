@@ -2,8 +2,7 @@ package com.reader.entity.util;
 
 /**
  * @author      ：李冠良
- * @description ：
-无描述
+ * @description ：表示一个键值对
  * @date        ：2025 2月 17 18:22
  */
 
