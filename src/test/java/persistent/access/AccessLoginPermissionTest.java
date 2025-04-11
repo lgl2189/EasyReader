@@ -2,7 +2,7 @@ package persistent.access;
 
 import com.reader.entity.net.CookieStorage;
 import com.reader.entity.net.LoginStatus;
-import com.reader.net.webpage.AccessLoginPermission;
+import com.reader.webpage.access.AccessLoginPermission;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;

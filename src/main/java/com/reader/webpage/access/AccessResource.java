@@ -1,4 +1,4 @@
-package com.reader.net;
+package com.reader.webpage.access;
 
 import com.reader.entity.net.ResponseData;
 import com.reader.exception.InvalidWebResource;

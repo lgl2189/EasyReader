@@ -1,4 +1,4 @@
-package com.reader.net.webpage;
+package com.reader.webpage.access;
 
 import com.reader.entity.template.BookTemplate;
 import com.reader.entity.net.Website;

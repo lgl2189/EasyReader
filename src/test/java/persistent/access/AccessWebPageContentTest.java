@@ -1,6 +1,6 @@
 package persistent.access;
 
-import com.reader.net.webpage.AccessWebPage;
+import com.reader.webpage.access.AccessWebPage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

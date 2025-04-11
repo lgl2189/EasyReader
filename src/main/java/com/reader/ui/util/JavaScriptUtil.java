@@ -1,6 +1,6 @@
 package com.reader.ui.util;
 
-import com.reader.net.webpage.AccessWebPage;
+import com.reader.webpage.access.AccessWebPage;
 
 import java.io.IOException;
 import java.io.InputStream;

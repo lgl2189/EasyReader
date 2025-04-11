@@ -2,7 +2,7 @@ package com.reader.ui.view;
 
 import com.reader.entity.net.LoginStatus;
 import com.reader.entity.net.Website;
-import com.reader.net.webpage.AccessLoginPermission;
+import com.reader.webpage.access.AccessLoginPermission;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
 import com.reader.ui.util.NotificationUtil;
