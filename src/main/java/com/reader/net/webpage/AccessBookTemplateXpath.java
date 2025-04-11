@@ -1,7 +1,7 @@
 package com.reader.net.webpage;
 
-import com.reader.entity.storage.BookTemplate;
-import com.reader.entity.storage.Website;
+import com.reader.entity.template.BookTemplate;
+import com.reader.entity.net.Website;
 import javafx.scene.control.Alert;
 import javafx.scene.web.WebEngine;
 import javafx.stage.WindowEvent;

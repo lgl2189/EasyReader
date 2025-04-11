@@ -17,5 +17,5 @@ public class WebsiteTemplate implements Serializable {
 
     private Website website;
     private BookTemplate bookTemplate;
-    private DirectoryTemplate directoryTemplate;
+    private DirectoryTemplate directoryTemplate;    
 }
