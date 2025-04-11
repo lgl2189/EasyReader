@@ -1,7 +1,7 @@
 package com.reader.ui.view;
 
-import com.reader.entity.storage.BookTemplate;
-import com.reader.entity.storage.Website;
+import com.reader.entity.template.BookTemplate;
+import com.reader.entity.net.Website;
 import com.reader.net.webpage.AccessBookTemplateXpath;
 import com.reader.storage.DataStorage;
 import com.reader.storage.common.impl.ObjectDepository;
