@@ -79,11 +79,29 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
      * @param action 菜单项点击事件，菜单项被点击时会触发该事件
      * @return 菜单项 ID
      */
-    public String addMenuItem(String title, Consumer<String> action) {
+    protected String addMenuItem(String title, Consumer<String> action) {
         if (isStart) {
             throw new IllegalCallerException("请在调用run()之前添加菜单项！");
         }
-        MenuItem menuItem = new MenuItem(IdGenerator.generateIdFromString(title), title, action);
+        MenuItem menuItem = new MenuItem(IdGenerator.generateIdFromString(title), title, MenuItemType.NORMAL.getFlag(), action);
+        menuItemList.add(menuItem);
+        return menuItem.getId();
+    }
+
+    /**
+     * 为浏览器自定义右键菜单添加菜单项
+     *
+     * @param title  菜单项标题
+     * @param type   菜单项类型
+     * @param action 菜单项点击事件，菜单项被点击时会触发该事件
+     * @return 菜单项 ID
+     * @see MenuItemType
+     */
+    protected String addMenuItem(String title, MenuItemType type, Consumer<String> action) {
+        if (isStart) {
+            throw new IllegalCallerException("请在调用run()之前添加菜单项！");
+        }
+        MenuItem menuItem = new MenuItem(IdGenerator.generateIdFromString(title), title, type.getFlag(), action);
         menuItemList.add(menuItem);
         return menuItem.getId();
     }
@@ -95,9 +113,23 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
      * @param action 菜单项点击事件，菜单项被点击时会触发该事件
      * @return 菜单项 ID
      */
-    public String addMenuItemForUiOperator(String title, Consumer<String> action) {
+    protected String addMenuItemForUiOperator(String title, Consumer<String> action) {
         Consumer<String> uiAction = event -> Platform.runLater(() -> action.accept(event));
         return addMenuItem(title, uiAction);
+    }
+
+    /**
+     * 为浏览器自定义右键菜单添加菜单项，该菜单项仅用于UI操作，action将在UI线程中执行
+     *
+     * @param title  菜单项标题
+     * @param type   菜单项类型
+     * @param action 菜单项点击事件，菜单项被点击时会触发该事件
+     * @return 菜单项 ID
+     * @see MenuItemType
+     */
+    protected String addMenuItemForUiOperator(String title, MenuItemType type, Consumer<String> action) {
+        Consumer<String> uiAction = event -> Platform.runLater(() -> action.accept(event));
+        return addMenuItem(title, type, uiAction);
     }
 
     /**
@@ -107,7 +139,7 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
      * @param title      菜单项标题
      * @param action     菜单项点击事件处理函数
      */
-    public void setMenuItemProperties(String menuItemId, String title, Consumer<String> action) {
+    protected void setMenuItemProperties(String menuItemId, String title, Consumer<String> action) {
         menuItemList.stream()
                 .filter(item -> item.getId().equals(menuItemId))
                 .findFirst()
@@ -140,15 +172,13 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
     protected static class MenuItem {
         private String id;
         private String title;
+        private String type;
         private Consumer<String> xpathHandler;
 
-        public MenuItem() {
-        }
-
-
-        public MenuItem(String id, String title, Consumer<String> xpathHandler) {
+        public MenuItem(String id, String title, String type, Consumer<String> xpathHandler) {
             this.id = id;
             this.title = title;
+            this.type = type;
             this.xpathHandler = xpathHandler;
         }
 
@@ -168,6 +198,14 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
             this.title = title;
         }
 
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
         public Consumer<String> getXpathHandler() {
             return xpathHandler;
         }
@@ -183,6 +221,25 @@ public abstract class AccessWebPageWithMenu extends AccessWebPage {
                     ", title='" + title + '\'' +
                     ", xpathHandler=" + xpathHandler +
                     '}';
+        }
+    }
+
+    /**
+     * 菜单项类型枚举类，用于区分菜单项的类型。
+     * 包括：normal（普通菜单项）、flag（标记菜单项）
+     */
+    protected enum MenuItemType {
+        NORMAL("normal"),
+        FLAG("flag");
+
+        private final String flag;
+
+        MenuItemType(String flag) {
+            this.flag = flag;
+        }
+
+        public String getFlag() {
+            return flag;
         }
     }
 }

@@ -131,6 +131,76 @@
         return '//' + path.join('/');
     }
 
+    // 生成用于查找标志元素的XPath
+    function getXpathForFlagElement(element) {
+        let el = element;
+        let path = [];
+
+        function isUniqueSelector(xpath) {
+            const result = document.evaluate(xpath, document.body, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+            return result.snapshotLength === 1;
+        }
+
+        while (el && el.nodeType === 1) {
+            let seg = null;
+
+            // 尝试使用唯一的 id
+            if (el.id && isUniqueSelector(`//${el.tagName.toLowerCase()}[@id="${el.id}"]`)) {
+                seg = `${el.tagName.toLowerCase()}[@id="${el.id}"]`;
+                path.unshift(seg);
+                break;
+            }
+
+            // 尝试使用唯一的 class
+            if (el.classList.length > 0) {
+                for (let className of el.classList) {
+                    if (isUniqueSelector(`//${el.tagName.toLowerCase()}[contains(@class, "${className}")]`)) {
+                        seg = `${el.tagName.toLowerCase()}[contains(@class, "${className}")]`;
+                        path.unshift(seg);
+                        break;
+                    }
+                }
+                if (seg) break;
+            }
+
+            // 尝试使用唯一的 attribute
+            const attributes = el.attributes;
+            for (let i = 0; i < attributes.length; i++) {
+                const attr = attributes[i];
+                if (attr.name !== 'id' && attr.name !== 'class' && attr.name !== 'style') {
+                    const xpath = `//${el.tagName.toLowerCase()}[@${attr.name}="${attr.value}"]`;
+                    if (isUniqueSelector(xpath)) {
+                        seg = `${el.tagName.toLowerCase()}[@${attr.name}="${attr.value}"]`;
+                        path.unshift(seg);
+                        break;
+                    }
+                }
+            }
+            if (seg) break;
+
+            // 尝试使用元素文本
+            const text = el.textContent.trim();
+            if (text) {
+                const xpath = `//${el.tagName.toLowerCase()}[text()="${text}"]`;
+                if (isUniqueSelector(xpath)) {
+                    seg = `${el.tagName.toLowerCase()}[text()="${text}"]`;
+                    path.unshift(seg);
+                    break;
+                }
+            }
+
+            // 使用父子层级
+            seg = el.tagName.toLowerCase();
+            let siblings = el.parentNode.children;
+            let index = Array.from(siblings).indexOf(el) + 1;
+            if (index > 1) seg += `[${index}]`;
+            path.unshift(seg);
+            el = el.parentNode;
+        }
+
+        return '//' + path.join('/');
+    }
+
     // ==================== 3. 菜单项点击处理 ====================
     function handleMenuItemClick(e) {
         try {
