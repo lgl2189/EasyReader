@@ -2,7 +2,7 @@ package com.reader.webpage.action.regular;
 
 import com.reader.webpage.action.base.BaseActionSequence;
 import com.reader.webpage.action.result.Result;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
  * @author ：李冠良
@@ -14,7 +14,7 @@ import org.openqa.selenium.WebDriver;
 public class SwitchActionSequence extends BaseActionSequence {
 
     @Override
-    public Result run(WebDriver driver) {
+    public Result run(ChromeDriver driver) {
         return null;
     }
 }

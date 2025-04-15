@@ -2,7 +2,7 @@ package com.reader.webpage.action.base;
 
 import com.reader.entity.util.Pair;
 import com.reader.webpage.action.result.Result;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -30,7 +30,7 @@ public abstract class BaseActionSequence implements Serializable {
      * 执行动作序列，并返回结果。
      * @return 动作序列的结果，当全部动作成功执行完毕时，返回成功的结果；否则返回失败的结果。
      */
-    public abstract Result run(WebDriver driver);
+    public abstract Result run(ChromeDriver driver);
 
     /**
      * 添加动作到动作序列中，并返回动作的索引，默认索引为当前动作序列中最大的索引+1，索引值从1开始。

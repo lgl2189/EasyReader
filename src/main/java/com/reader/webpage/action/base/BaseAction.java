@@ -1,7 +1,7 @@
 package com.reader.webpage.action.base;
 
 import com.reader.webpage.action.result.Result;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -35,7 +35,7 @@ public abstract class BaseAction implements Serializable {
         this.elementXpath = elementXpath;
     }
 
-    public abstract Result run(WebDriver webDriver);
+    public abstract Result run(ChromeDriver driver);
 
     public String getActionName() {
         return actionName;
