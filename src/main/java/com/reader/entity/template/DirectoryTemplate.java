@@ -1,5 +1,7 @@
 package com.reader.entity.template;
 
+import com.reader.webpage.action.base.BaseActionSequence;
+
 import java.io.Serializable;
 
 /**
@@ -13,10 +15,21 @@ public class DirectoryTemplate implements Serializable {
     private static final long serialVersionUID = 8223673115786971656L;
 
     /**
-     * 目录页表达式，用于移动到目录的页面，应该为一个格式字符串，其中包含一个{}用于替换页码
-     * 例如：http://www.example.com/category/page/{}
+     * 目录页url
      */
-    private String pageUrlRegular;
+    private String directoryUrl;
+    /**
+     * 获取目录的每一项的动作序列
+     */
+    private BaseActionSequence getItemActionSequence;
+    /**
+     * 进入下一页的动作序列
+     */
+    private BaseActionSequence nextPageXpath;
+    /**
+     * 确认是否有下一页的动作序列
+     */
+    private BaseActionSequence endPageXpath;
 
 
 }

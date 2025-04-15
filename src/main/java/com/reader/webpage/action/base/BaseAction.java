@@ -1,8 +1,6 @@
-package com.reader.webpage.action;
+package com.reader.webpage.action.base;
 
 import com.reader.webpage.action.result.Result;
-import com.reader.webpage.action.result.ResultType;
-import javafx.scene.web.WebEngine;
 import org.openqa.selenium.WebDriver;
 
 import java.io.Serial;
@@ -15,7 +13,7 @@ import java.io.Serializable;
  */
 
 
-public class Action implements Serializable {
+public abstract class BaseAction implements Serializable {
     @Serial
     private static final long serialVersionUID = 1137719672592657412L;
 
@@ -23,33 +21,21 @@ public class Action implements Serializable {
 
     private String elementXpath;
 
-    private ActionType actionType;
-
     private Result result;
 
-    public Action() {
+    public BaseAction() {
     }
 
-    public Action(String elementXpath, ActionType actionType) {
+    public BaseAction(String elementXpath) {
         this.elementXpath = elementXpath;
-        this.actionType = actionType;
     }
 
-    public Action(String actionName, String elementXpath, ActionType actionType) {
+    public BaseAction(String actionName, String elementXpath) {
         this.actionName = actionName;
         this.elementXpath = elementXpath;
-        this.actionType = actionType;
     }
 
-    public void run(WebDriver webDriver){
-        switch (actionType) {
-
-        }
-    }
-
-    public Result execute(){
-        return new Result(ResultType.SUCCESS);
-    }
+    public abstract Result run(WebDriver webDriver);
 
     public String getActionName() {
         return actionName;
@@ -67,14 +53,6 @@ public class Action implements Serializable {
         this.elementXpath = elementXpath;
     }
 
-    public ActionType getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
-    }
-
     public Result getResult() {
         return result;
     }
@@ -86,8 +64,9 @@ public class Action implements Serializable {
     @Override
     public String toString() {
         return "Action{" +
-                "elementXpath='" + elementXpath + '\'' +
-                ", actionType=" + actionType +
+                "actionName='" + actionName + '\'' +
+                ", elementXpath='" + elementXpath + '\'' +
+                ", result=" + result +
                 '}';
     }
 }

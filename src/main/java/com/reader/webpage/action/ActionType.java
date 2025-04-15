@@ -6,7 +6,7 @@ package com.reader.webpage.action;
  * @date ：2025 4月 11 22:48
  */
 
-
+@Deprecated
 public enum ActionType {
     // 鼠标操作
     CLICK,
@@ -34,5 +34,7 @@ public enum ActionType {
     // 检查操作
     CHECK_VISIBILITY,
     CHECK_ENABLED,
-    CHECK_SELECTED
+    CHECK_SELECTED,
+    // 获取操作
+    GET_TEXT
 }

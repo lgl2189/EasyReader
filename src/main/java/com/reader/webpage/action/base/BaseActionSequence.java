@@ -1,7 +1,8 @@
-package com.reader.webpage.action;
+package com.reader.webpage.action.base;
 
 import com.reader.entity.util.Pair;
 import com.reader.webpage.action.result.Result;
+import org.openqa.selenium.WebDriver;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,27 +17,27 @@ import java.util.List;
  */
 
 
-public abstract class ActionSequence implements Serializable {
+public abstract class BaseActionSequence implements Serializable {
     @Serial
     private static final long serialVersionUID = 6610868168301757776L;
 
-    protected final List<Pair<Integer, Action>> actionList = new ArrayList<>();
+    protected final List<Pair<Integer, BaseAction>> actionList = new ArrayList<>();
 
-    public ActionSequence() {
+    public BaseActionSequence() {
     }
 
     /**
      * 执行动作序列，并返回结果。
      * @return 动作序列的结果，当全部动作成功执行完毕时，返回成功的结果；否则返回失败的结果。
      */
-    public abstract Result run();
+    public abstract Result run(WebDriver driver);
 
     /**
      * 添加动作到动作序列中，并返回动作的索引，默认索引为当前动作序列中最大的索引+1，索引值从1开始。
      * @param action 要添加的动作
      * @return 动作的索引
      */
-    public int addAction(Action action) {
+    public int addAction(BaseAction action) {
         int index = findMaxIndex() + 1;
         actionList.add(new Pair<>(index, action));
         return index;
@@ -49,7 +50,7 @@ public abstract class ActionSequence implements Serializable {
      * @return 动作的索引
      */
     @Deprecated
-    public int addAction(Action action, int index) {
+    public int addAction(BaseAction action, int index) {
         if (isIndexExist(index)) {
             actionList.stream()
                     .filter(pair -> pair.getKey() >= index)
@@ -74,7 +75,7 @@ public abstract class ActionSequence implements Serializable {
         actionList.sort(Comparator.comparingInt(Pair::getKey));
     }
 
-    public List<Pair<Integer, Action>> getActionList() {
+    public List<Pair<Integer, BaseAction>> getActionList() {
         return actionList;
     }
 

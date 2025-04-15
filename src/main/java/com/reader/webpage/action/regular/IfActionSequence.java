@@ -1,7 +1,8 @@
 package com.reader.webpage.action.regular;
 
-import com.reader.webpage.action.ActionSequence;
+import com.reader.webpage.action.base.BaseActionSequence;
 import com.reader.webpage.action.result.Result;
+import org.openqa.selenium.WebDriver;
 
 /**
  * @author ：李冠良
@@ -10,9 +11,10 @@ import com.reader.webpage.action.result.Result;
  */
 
 
-public class IfActionSequence extends ActionSequence {
+public class IfActionSequence extends BaseActionSequence {
+
     @Override
-    public Result run() {
+    public Result run(WebDriver driver) {
         return null;
     }
 }
