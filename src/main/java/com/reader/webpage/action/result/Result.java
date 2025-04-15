@@ -28,6 +28,38 @@ public class Result implements Serializable {
         this.message = message;
     }
 
+    public static Result success() {
+        return new Result(ResultType.SUCCESS);
+    }
+
+    public static Result success(String message) {
+        return new Result(ResultType.SUCCESS, message);
+    }
+
+    public static Result error() {
+        return new Result(ResultType.ERROR);
+    }
+
+    public static Result error(String message) {
+        return new Result(ResultType.ERROR, message);
+    }
+
+    public static Result warning() {
+        return new Result(ResultType.WARNING);
+    }
+
+    public static Result warning(String message) {
+        return new Result(ResultType.WARNING, message);
+    }
+
+    public static Result info() {
+        return new Result(ResultType.INFO);
+    }
+
+    public static Result info(String message) {
+        return new Result(ResultType.INFO, message);
+    }
+
     public ResultType getStatus() {
         return status;
     }
