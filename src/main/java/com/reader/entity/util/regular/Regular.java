@@ -1,8 +1,5 @@
 package com.reader.entity.util.regular;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * @author ：李冠良
  * @description ：Regular 接口，实现这个接口，表示这个类表示一种公式。
